@@ -3,6 +3,7 @@ namespace Inkifi\Pwinty;
 use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
 use Inkifi\Mediaclip\API\Entity\Project;
 use Inkifi\Mediaclip\Event as Ev;
+use Inkifi\Pwinty\Settings as S;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\App\Config\ScopeConfigInterface as IScopeConfig;
 use Magento\Sales\Model\Order as O;
@@ -10,7 +11,7 @@ use Magento\Sales\Model\Order\Item as OI;
 use Magento\Store\Model\StoreManagerInterface as IStoreManager;
 use Mangoit\MediaclipHub\Model\Orders as mOrder;
 use Mangoit\MediaclipHub\Model\Product as mP;
-use pwinty\PhpPwinty;
+use pwinty\PhpPwinty as API;
 use Zend\Log\Logger as zL;
 // 2019-02-24
 final class AvailableForDownload {
@@ -26,19 +27,18 @@ final class AvailableForDownload {
 	 */
 	private function _p() {
 		$ev = Ev::s(); /** @var Ev $ev */
-		$merchantId = df_o(IScopeConfig::class)->getValue('api/pwinty_api_auth/merchant_id');
-		$apiKey = df_o(IScopeConfig::class)->getValue('api/pwinty_api_auth/pwinty_api_key');
-		$pwinty = new PhpPwinty([
-			'api' => 'sandbox' //production
-			,'apiKey' => $apiKey
-			,'merchantId' => $merchantId
-		]);
+		$s = S::s($ev->store()); /** @var S $s */
+		$api = new API([
+			'api' => $s->test() ? 'sandbox' : 'production'
+			,'apiKey' => $s->privateKey()
+			,'merchantId' => $s->merchantID()
+		]); /** @var API $api */
 		// 2018-08-16 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
 		// «Modify orders numeration for Mediaclip»
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
 		$o = df_order($ev->oidI()); /** @var O $o */
 		$imageArray = [];
-		$catalogue = $pwinty->getCatalogue('GB', 'Pro');
+		$catalogue = $api->getCatalogue('GB', 'Pro');
 		foreach (ikf_api_oi($o->getId()) as $mOI) { /** @var mOI $mOI */
 			$project = $mOI->project(); /** @var Project $project */
 			$oi = df_oic()->addFieldToFilter('mediaclip_project_id', ['eq' => $project->id()])
@@ -99,7 +99,7 @@ final class AvailableForDownload {
 		$customer = df_new_om(Customer::class)->load($customerId);
 		$name = $customer['firstname'].' '.$customer['lastname'];
 		$email = $customer['email'];
-		$pOrder = $pwinty->createOrder(// create order to pwinty
+		$pOrder = $api->createOrder(// create order to pwinty
 			$name,          //name
 			$email,         //email address
 			$street1,    //address1
@@ -125,18 +125,18 @@ final class AvailableForDownload {
 			$value->setPwintyOrderId($pwintyOrderId);
 			$value->save();
 		}
-		$photos =  $pwinty->addPhotos( //add photos to order
+		$photos =  $api->addPhotos( //add photos to order
 			$pwintyOrderId, //order id
 			$imageArray
 		);
 		$zl->info($photos);
-		$getOrderStatus = $pwinty->getOrderStatus(// check order status
+		$getOrderStatus = $api->getOrderStatus(// check order status
 			$pwintyOrderId              //orderid
 			 //status
 		);
 		$zl->info($getOrderStatus);
 		if ($getOrderStatus['isValid'] == 1) {// submit order if no error
-			$pwinty->updateOrderStatus(
+			$api->updateOrderStatus(
 				$pwintyOrderId,              //orderid
 				"Submitted"         //status
 			);

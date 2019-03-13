@@ -1,7 +1,10 @@
 <?php
 namespace Inkifi\Pwinty;
-// 2019-03-13
-/** @method static Settings s() */
+/**
+ * 2019-03-13
+ * @used-by \Inkifi\Pwinty\AvailableForDownload::_p()
+ * @method static Settings s()
+ */
 final class Settings extends \Df\API\Settings {
 	/**
 	 * 2019-03-13
