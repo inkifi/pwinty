@@ -26,5 +26,5 @@ final class Settings extends \Df\Config\Settings {
 	 * @used-by \Df\Config\Settings::v()
 	 * @return string
 	 */
-	protected function prefix() {return 'api/pwinty_api_auth';}
+	protected function prefix() {return 'api/pwinty';}
 }
