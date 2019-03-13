@@ -36,13 +36,11 @@ final class AvailableForDownload {
 		// 2018-08-16 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
 		// «Modify orders numeration for Mediaclip»
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
-		$o = df_order($ev->oidI()); /** @var O $o */
+		$o = $ev->o(); /** @var O $o */
 		$imageArray = [];
 		$catalogue = $api->getCatalogue('GB', 'Pro');
 		foreach (ikf_api_oi($o->getId()) as $mOI) { /** @var mOI $mOI */
-			$project = $mOI->project(); /** @var Project $project */
-			$oi = df_oic()->addFieldToFilter('mediaclip_project_id', ['eq' => $project->id()])
-				->getLastItem(); /** @var OI $oi */
+			$oi = $ev->oi(); /** @var OI $oi */
 			$mP = $mOI->mProduct(); /** @var mP $mP */
 			$pwintyProduct = $mP['pwinty_product_name'];
 			$frameColour = $mP['frame_colour'];
