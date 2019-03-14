@@ -1,11 +1,10 @@
 <?php
 namespace Inkifi\Pwinty;
 use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
-use Inkifi\Mediaclip\API\Entity\Project;
 use Inkifi\Mediaclip\Event as Ev;
+use Inkifi\Mediaclip\Printer;
 use Inkifi\Pwinty\Settings as S;
 use Magento\Customer\Model\Customer;
-use Magento\Framework\App\Config\ScopeConfigInterface as IScopeConfig;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Item as OI;
 use Magento\Store\Model\StoreManagerInterface as IStoreManager;
@@ -39,7 +38,7 @@ final class AvailableForDownload {
 		$o = $ev->o(); /** @var O $o */
 		$imageArray = [];
 		$catalogue = $api->getCatalogue('GB', 'Pro');
-		foreach (ikf_api_oi($o->getId()) as $mOI) { /** @var mOI $mOI */
+		foreach (ikf_api_oi($o->getId(), Printer::PWINTY) as $mOI) { /** @var mOI $mOI */
 			$oi = $ev->oi(); /** @var OI $oi */
 			$mP = $mOI->mProduct(); /** @var mP $mP */
 			$pwintyProduct = $mP['pwinty_product_name'];
