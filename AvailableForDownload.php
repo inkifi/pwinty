@@ -7,6 +7,7 @@ use Inkifi\Pwinty\Settings as S;
 use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Item as OI;
+use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface as IStoreManager;
 use Mangoit\MediaclipHub\Model\Orders as mOrder;
 use Mangoit\MediaclipHub\Model\Product as mP;
@@ -37,7 +38,51 @@ final class AvailableForDownload {
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
 		$o = $ev->o(); /** @var O $o */
 		$imageArray = [];
-		$catalogue = $api->getCatalogue('GB', 'Pro');
+		/**
+		 * 2019-03-19
+		 * 1) `$api->getCatalogue` is a legacy API call: https://www.pwinty.com/api/2.2/#products-list
+		 * It is absent in the latest Pwinty version (2.3.0).
+		 * 2) $catalogue has the following format:
+		 *	{
+		 *		"country": "United Kingdom",
+		 *		"countryCode": "GB",
+		 *		"qualityLevel": "Pro",
+		 *		"items": [
+		 *			{
+		 *				attributes: [
+		 *					{
+		 *						name: "finish",
+		 *						validValues: ["matte", "glossy"]
+		 *					}
+		 *				],
+		 *				description: "10x12 Print",
+		 *				fullProductHorizontalSize: 10,
+		 *				fullProductVerticalSize: 12,
+		 *				imageHorizontalSize: 10,
+		 *				imageVerticalSize: 12,
+		 *				name: "10x12",
+		 *				priceGBP: 150,
+		 *				priceUSD: 350,
+		 *				recommendedHorizontalResolution: 1500,
+		 *				recommendedVerticalResolution: 1800,
+		 *				shippingBand: "Prints",
+		 *				sizeUnits: "inches"
+		 *			},
+		 *			{}
+		 *		],
+		 *		shippingRates: [
+		 *			{
+		 *				band: "Canvas",
+		 *				description: "Canvas tracked- UPS",
+		 *				isTracked: true,
+		 *				priceGBP: 700,
+		 *				priceUSD: 1100
+		 *			},
+		 *			{}
+		 *		]
+		 *	}
+		 */
+		$catalogue = $api->getCatalogue('GB', 'Pro'); /** @var array(string => mixed) $catalogue */
 		foreach (ikf_api_oi($o->getId(), Printer::PWINTY) as $mOI) { /** @var mOI $mOI */
 			$oi = $ev->oi(); /** @var OI $oi */
 			$mP = $mOI->mProduct(); /** @var mP $mP */
@@ -47,7 +92,7 @@ final class AvailableForDownload {
 			$filesUploadPath = '';//AFD::path($oi, 'pwinty', $mP['product_label']);
 			$imgPath = explode('html/', $filesUploadPath);
 			$storeManager = df_o(IStoreManager::class);
-			$store = $storeManager->getStore();
+			$store = $storeManager->getStore(); /** @var Store $store */
 			$baseUrl = $store->getBaseUrl();
 			if ($filesUploadPath != '') {
 				$quantity = 0 ;
@@ -63,11 +108,36 @@ final class AvailableForDownload {
 						$imgAttribute['copies'] = $quantity+1;
 						$imgAttribute['type'] = $pwintyProduct;
 						foreach ($catalogue['items'] as $value) {
-							//check if product has frame attribute
-							if ($value['name'] == $pwintyProduct) {
-								if($frameColour != "" && !empty($value['attributes'])) {
-									$imgAttribute['attributes'][$value['attributes'][0]['name']] = strtolower($frameColour);
-								}
+							/**
+							 * 2019-03-19
+							 * $value has the following format:
+							 *	{
+							 *		attributes: [
+							 *			{
+							 *				name: "finish",
+							 *				validValues: ["matte", "glossy"]
+							 *			}
+							 *		],
+							 *		description: "10x12 Print",
+							 *		fullProductHorizontalSize: 10,
+							 *		fullProductVerticalSize: 12,
+							 *		imageHorizontalSize: 10,
+							 *		imageVerticalSize: 12,
+							 *		name: "10x12",
+							 *		priceGBP: 150,
+							 *		priceUSD: 350,
+							 *		recommendedHorizontalResolution: 1500,
+							 *		recommendedVerticalResolution: 1800,
+							 *		shippingBand: "Prints",
+							 *		sizeUnits: "inches"
+							 *	}
+							 */
+							if (
+								$frameColour
+								&& ($a = dfa($value, 'attributes'))
+								&& $pwintyProduct === $value['name']
+							) {
+								$imgAttribute['attributes'][$a[0]['name']] = strtolower($frameColour);
 							}
 						}
 						$imageArray[$oi->getId()] = $imgAttribute;
