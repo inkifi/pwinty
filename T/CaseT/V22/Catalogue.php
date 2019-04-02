@@ -10,6 +10,7 @@ final class Catalogue extends \Inkifi\Pwinty\T\CaseT\V22 {
 
 	/**
 	 * 2019-04-02
+	 * «Create an order» https://www.pwinty.com/api/2.2/#orders-create
 	 * An item with attributes:
 	 *	{
 	 *		"attributes": [
@@ -39,7 +40,7 @@ final class Catalogue extends \Inkifi\Pwinty\T\CaseT\V22 {
 	;}));}
 
 	/**
-	 * @test 2019-04-02
+	 * 2019-04-02
 	 * An item with multiple attributes:
 	 *	{
 	 *		"attributes": [

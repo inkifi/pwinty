@@ -36,31 +36,60 @@ final class AvailableForDownload {
 		$sa = $o->getShippingAddress(); /** @var OA $sa */
 		$customer = df_customer($o); /** @var Customer $customer */
 		$api = ikf_pw_api($ev->store()); /** @var API $api */
-		$pOrder = $api->createOrder(// create order to pwinty
-			df_cc_s($customer['firstname'], $customer['lastname']),
-			$customer['email'],
-			df_ccc(', ', $sa->getCompany(), $sa->getStreetLine(1)),
-			$sa->getStreetLine(2),
-			$sa->getCity(),
-			$sa->getRegion(),
-			$sa->getPostcode(),
-			'GB',
-			$sa->getCountryId(),
-			true,
-			'InvoiceMe', //payment method
-			'Pro' //quality
-		);
+		/**
+		 * 2019-04-02
+		 * «Create an order» https://www.pwinty.com/api/2.2/#orders-create
+		 * A response:
+		 * {
+		 *		"address1": "47 Wolverhampton Road",
+		 *		"address2": "",
+		 *		"addressTownOrCity": "Dudley",
+		 *		"countryCode": "GB",
+		 *		"destinationCountryCode": "GB",
+		 *		"errorMessage": null,
+		 *		"id": 775277,
+		 *		"payment": "InvoiceMe",
+		 *		"paymentUrl": null,
+		 *		"photos": [],
+		 *		"postalOrZipCode": "DY3 1RG",
+		 *		"price": 0,
+		 *		"qualityLevel": "Pro",
+		 *		"recipientName": "Jessica Bowkley ",
+		 *		"shippingInfo": {
+		 *			"isTracked": false,
+		 *			"price": 0,
+		 *			"trackingNumber": null,
+		 *			"trackingUrl": null
+		 *		},
+		 *		"stateOrCounty": "England",
+		 *		"status": "NotYetSubmitted"
+		 *	}
+		 */
+		$pOrder = $api->createOrder(
+			df_cc_s($customer['firstname'], $customer['lastname'])
+			,$customer['email']
+			,df_ccc(', ', $sa->getCompany(), $sa->getStreetLine(1))
+			,$sa->getStreetLine(2)
+			,$sa->getCity()
+			,$sa->getRegion()
+			,$sa->getPostcode()
+			,'GB'
+			,$sa->getCountryId()
+			,true
+			,'InvoiceMe' //payment method
+			,'Pro' //quality
+		); /** @var array(string => mixed) $pOrder */
 		$zl = ikf_logger('pwinty_orders_status'); /** @var zL $zl */
 		$zl->info($pOrder);
-		$pwintyOrderId = $pOrder['id'];
-		//save pwinty id to custom table
-		$mOrderModel = df_new_om(mOrder::class);
-		$mOrderModelCollection = $mOrderModel->getCollection();
-		$mOrder = $mOrderModelCollection->addFieldToFilter('magento_order_id', ['eq' => $ev->oidE()]);
-		foreach ($mOrder as $key => $value) {
-			$value->setPwintyOrderId($pwintyOrderId);
-			$value->save();
-		}
+		// 2019-04-03 «775277»
+		$pwintyOrderId = (int)$pOrder['id'];  /** @var int $pwintyOrderId*/
+		$mOrder = $ev->mo(); /** @var mOrder $mOrder */
+		/**
+		 * 2019-04-03
+		 * @used-by \Mangoit\MediaclipHub\Controller\Index\PwintyOrderStatusUpdate::execute()
+		 */
+		$mOrder->setPwintyOrderId($pwintyOrderId);
+		$mOrder->save();
 		/**
 		 * 2019-04-02
 		 * 1) «Add multiple photos to an order»: https://www.pwinty.com/api/2.2/#photos-create-multiple
