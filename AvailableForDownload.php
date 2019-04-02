@@ -81,6 +81,44 @@ final class AvailableForDownload {
 		 *			{}
 		 *		]
 		 *	}
+		 * 2019-04-02
+		 * I have got a real response via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t01() test case:
+		 * {
+		 *		"country": "UNITED KINGDOM",
+		 *		"countryCode": "GB",
+		 *		"errorMessage": null,
+		 *		"items": {
+		 *			"0": {
+		 *				"attributes": [],
+		 *				"description": "10x10 inch print",
+		 *				"errorMessage": null,
+		 *				"fullProductHorizontalSize": 10,
+		 *				"fullProductVerticalSize": 10,
+		 *				"imageHorizontalSize": 10,
+		 *				"imageVerticalSize": 10,
+		 *				"itemType": "Print",
+		 *				"name": "10x10",
+		 *				"priceGBP": 200,
+		 *				"priceUSD": 261,
+		 *				"recommendedHorizontalResolution": 1500,
+		 *				"recommendedVerticalResolution": 1500,
+		 *				"shippingBand": "Prints",
+		 *				"sizeUnits": "inches"
+		 *			},
+		 *			<...>
+		 *		},
+		 *		"qualityLevel": "Pro",
+		 *		"shippingRates": [
+		 *			{
+		 *				"band": "LargePrints",
+		 *				"description": "1st Class Royal Mail",
+		 *				"isTracked": false,
+		 *				"priceGBP": 399,
+		 *				"priceUSD": 521
+		 *			},
+		 *			<...>
+		 *		]
+		 *	}
 		 */
 		$catalogue = $api->getCatalogue('GB', 'Pro'); /** @var array(string => mixed) $catalogue */
 		foreach (ikf_api_oi($o->getId(), Printer::PWINTY) as $mOI) { /** @var mOI $mOI */
