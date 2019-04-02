@@ -4,6 +4,7 @@ use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
 use Inkifi\Mediaclip\API\Entity\Order\Item\File as F;
 use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
+use Inkifi\Pwinty\Setup\UpgradeSchema as Schema;
 use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Address as OA;
@@ -84,11 +85,8 @@ final class AvailableForDownload {
 		// 2019-04-03 «775277»
 		$pwintyOrderId = (int)$pOrder['id'];  /** @var int $pwintyOrderId*/
 		$mOrder = $ev->mo(); /** @var mOrder $mOrder */
-		/**
-		 * 2019-04-03
-		 * @used-by \Mangoit\MediaclipHub\Controller\Index\PwintyOrderStatusUpdate::execute()
-		 */
-		$mOrder->setPwintyOrderId($pwintyOrderId);
+		/** 2019-04-03 @used-by \Mangoit\MediaclipHub\Controller\Index\PwintyOrderStatusUpdate::execute() */
+		$mOrder[mOrder::F__PWINTY_ORDER_ID] = $pwintyOrderId;
 		$mOrder->save();
 		/**
 		 * 2019-04-02
