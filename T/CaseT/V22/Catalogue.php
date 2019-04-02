@@ -7,8 +7,41 @@ final class Catalogue extends \Inkifi\Pwinty\T\CaseT\V22 {
 	/** @test 2019-04-02 */
 	function t00() {}
 
+	/** 2019-04-02 */
+	function t01() {echo df_json_encode(self::catalogue());}
+
 	/**
 	 * @test 2019-04-02
+	 * An item with attributes:
+	 *	{
+	 *		"attributes": [
+	 *			{
+	 *				"name": "finish",
+	 *				"validValues": ["matte", "glossy"]
+	 *			}
+	 *		],
+	 *		"description": "5x5 inch print",
+	 *		"errorMessage": null,
+	 *		"fullProductHorizontalSize": 5,
+	 *		"fullProductVerticalSize": 5,
+	 *		"imageHorizontalSize": 5,
+	 *		"imageVerticalSize": 5,
+	 *		"itemType": "Print",
+	 *		"name": "5x5",
+	 *		"priceGBP": 60,
+	 *		"priceUSD": 78,
+	 *		"recommendedHorizontalResolution": 750,
+	 *		"recommendedVerticalResolution": 750,
+	 *		"shippingBand": "Prints",
+	 *		"sizeUnits": "inches"
+	 *	}
+	 */
+	function t02() {echo df_json_encode(array_filter(self::catalogue()['items'], function(array $i) {return
+		$i['attributes']
+	;}));}
+
+	/**
+	 * 2019-04-02
 	 * A response:
 	 * {
 	 *		"country": "UNITED KINGDOM",
@@ -46,15 +79,17 @@ final class Catalogue extends \Inkifi\Pwinty\T\CaseT\V22 {
 	 *			<...>
 	 *		]
 	 *	}
+	 * @used-by t01()
+	 * @used-by t02()
+	 * @return @var array(string => mixed)
 	 */
-	function t01() {
+	private static function catalogue() {
 		$s = S::s(); /** @var S $s */
 		$api = new API([
 			'api' => $s->test() ? 'sandbox' : 'production'
 			,'apiKey' => $s->privateKey()
 			,'merchantId' => $s->merchantID()
 		]); /** @var API $api */
-		$catalogue = $api->getCatalogue('GB', 'Pro'); /** @var array(string => mixed) $catalogue */
-		echo df_json_encode($catalogue);
+		return $api->getCatalogue('GB', 'Pro');
 	}
 }

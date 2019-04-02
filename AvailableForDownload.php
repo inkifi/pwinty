@@ -168,6 +168,31 @@ final class AvailableForDownload {
 							 *		recommendedVerticalResolution: 1800,
 							 *		shippingBand: "Prints",
 							 *		sizeUnits: "inches"
+							 *	}   
+							 * 2019-04-02
+							 * I have got a real item with attributes
+							 * via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t02() test case:
+							 *	{
+							 *		"attributes": [
+							 *			{
+							 *				"name": "finish",
+							 *				"validValues": ["matte", "glossy"]
+							 *			}
+							 *		],
+							 *		"description": "5x5 inch print",
+							 *		"errorMessage": null,
+							 *		"fullProductHorizontalSize": 5,
+							 *		"fullProductVerticalSize": 5,
+							 *		"imageHorizontalSize": 5,
+							 *		"imageVerticalSize": 5,
+							 *		"itemType": "Print",
+							 *		"name": "5x5",
+							 *		"priceGBP": 60,
+							 *		"priceUSD": 78,
+							 *		"recommendedHorizontalResolution": 750,
+							 *		"recommendedVerticalResolution": 750,
+							 *		"shippingBand": "Prints",
+							 *		"sizeUnits": "inches"
 							 *	}
 							 */
 							if (
