@@ -1,17 +1,15 @@
 <?php
 namespace Inkifi\Pwinty\T\CaseT\V22;
-use Inkifi\Pwinty\Settings as S;
-use pwinty\PhpPwinty as API;
 // 2019-04-02
 final class Catalogue extends \Inkifi\Pwinty\T\CaseT\V22 {
 	/** @test 2019-04-02 */
 	function t00() {}
 
 	/** 2019-04-02 */
-	function t01() {echo df_json_encode(self::catalogue());}
+	function t01() {echo df_json_encode(ikf_pw_items());}
 
 	/**
-	 * @test 2019-04-02
+	 * 2019-04-02
 	 * An item with attributes:
 	 *	{
 	 *		"attributes": [
@@ -36,60 +34,49 @@ final class Catalogue extends \Inkifi\Pwinty\T\CaseT\V22 {
 	 *		"sizeUnits": "inches"
 	 *	}
 	 */
-	function t02() {echo df_json_encode(array_filter(self::catalogue()['items'], function(array $i) {return
+	function t02() {echo df_json_encode(array_filter(ikf_pw_items(), function(array $i) {return
 		$i['attributes']
 	;}));}
 
 	/**
-	 * 2019-04-02
-	 * A response:
-	 * {
-	 *		"country": "UNITED KINGDOM",
-	 *		"countryCode": "GB",
-	 *		"errorMessage": null,
-	 *		"items": {
-	 *			"0": {
-	 *				"attributes": [],
-	 *				"description": "10x10 inch print",
-	 *				"errorMessage": null,
-	 *				"fullProductHorizontalSize": 10,
-	 *				"fullProductVerticalSize": 10,
-	 *				"imageHorizontalSize": 10,
-	 *				"imageVerticalSize": 10,
-	 *				"itemType": "Print",
-	 *				"name": "10x10",
-	 *				"priceGBP": 200,
-	 *				"priceUSD": 261,
-	 *				"recommendedHorizontalResolution": 1500,
-	 *				"recommendedVerticalResolution": 1500,
-	 *				"shippingBand": "Prints",
-	 *				"sizeUnits": "inches"
-	 *			},
-	 *			<...>
-	 *		},
-	 *		"qualityLevel": "Pro",
-	 *		"shippingRates": [
+	 * @test 2019-04-02
+	 * An item with multiple attributes:
+	 *	{
+	 *		"attributes": [
 	 *			{
-	 *				"band": "LargePrints",
-	 *				"description": "1st Class Royal Mail",
-	 *				"isTracked": false,
-	 *				"priceGBP": 399,
-	 *				"priceUSD": 521
+	 *				"name": "paper",
+	 *				"validValues": ["smooth_art", "cold_press_watercolour"]
 	 *			},
-	 *			<...>
-	 *		]
+	 *			{
+	 *				"name": "frame_colour",
+	 *				"validValues": ["gold", "silver", "natural", "dark_brown", "black", "white"]
+	 *			},
+	 *			{
+	 *				"name": "hanging_orientation",
+	 *				"validValues": ["portrait", "landscape"]
+	 *			},
+	 *			{
+	 *				"name": "glaze",
+	 *				"validValues": ["float_glass", "acrylic"]
+	 *			}
+	 *		],
+	 *		"description": "Box Framed, unmounted 24x48 fine art print",
+	 *		"errorMessage": null,
+	 *		"fullProductHorizontalSize": 24,
+	 *		"fullProductVerticalSize": 48,
+	 *		"imageHorizontalSize": 24,
+	 *		"imageVerticalSize": 48,
+	 *		"itemType": "Framed Poster",
+	 *		"name": "BoxFrame_24x48_Unmounted",
+	 *		"priceGBP": 9750,
+	 *		"priceUSD": 12735,
+	 *		"recommendedHorizontalResolution": 3600,
+	 *		"recommendedVerticalResolution": 7200,
+	 *		"shippingBand": "FramedPrints",
+	 *		"sizeUnits": "inches"
 	 *	}
-	 * @used-by t01()
-	 * @used-by t02()
-	 * @return @var array(string => mixed)
 	 */
-	private static function catalogue() {
-		$s = S::s(); /** @var S $s */
-		$api = new API([
-			'api' => $s->test() ? 'sandbox' : 'production'
-			,'apiKey' => $s->privateKey()
-			,'merchantId' => $s->merchantID()
-		]); /** @var API $api */
-		return $api->getCatalogue('GB', 'Pro');
-	}
+	function t03() {echo df_json_encode(array_filter(ikf_pw_items(), function(array $i) {return
+		1 < count($i['attributes'])
+	;}));}
 }

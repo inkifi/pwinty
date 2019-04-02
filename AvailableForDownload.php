@@ -1,14 +1,13 @@
 <?php
 namespace Inkifi\Pwinty;
 use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
+use Inkifi\Mediaclip\API\Entity\Order\Item\File as F;
 use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
-use Inkifi\Pwinty\Settings as S;
 use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
+use Magento\Sales\Model\Order\Address as OA;
 use Magento\Sales\Model\Order\Item as OI;
-use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface as IStoreManager;
 use Mangoit\MediaclipHub\Model\Orders as mOrder;
 use Mangoit\MediaclipHub\Model\Product as mP;
 use pwinty\PhpPwinty as API;
@@ -27,221 +26,29 @@ final class AvailableForDownload {
 	 */
 	private function _p() {
 		$ev = Ev::s(); /** @var Ev $ev */
-		$s = S::s($ev->store()); /** @var S $s */
-		$api = new API([
-			'api' => $s->test() ? 'sandbox' : 'production'
-			,'apiKey' => $s->privateKey()
-			,'merchantId' => $s->merchantID()
-		]); /** @var API $api */
 		// 2018-08-16 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
 		// «Modify orders numeration for Mediaclip»
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
 		$o = $ev->o(); /** @var O $o */
-		$imageArray = [];
-		/**
-		 * 2019-03-19
-		 * 1) `$api->getCatalogue` is a legacy API call: https://www.pwinty.com/api/2.2/#products-list
-		 * It is absent in the latest Pwinty version (2.3.0).
-		 * 2) $catalogue has the following format (this example is from the official documentation):
-		 *	{
-		 *		"country": "United Kingdom",
-		 *		"countryCode": "GB",
-		 *		"qualityLevel": "Pro",
-		 *		"items": [
-		 *			{
-		 *				attributes: [
-		 *					{
-		 *						name: "finish",
-		 *						validValues: ["matte", "glossy"]
-		 *					}
-		 *				],
-		 *				description: "10x12 Print",
-		 *				fullProductHorizontalSize: 10,
-		 *				fullProductVerticalSize: 12,
-		 *				imageHorizontalSize: 10,
-		 *				imageVerticalSize: 12,
-		 *				name: "10x12",
-		 *				priceGBP: 150,
-		 *				priceUSD: 350,
-		 *				recommendedHorizontalResolution: 1500,
-		 *				recommendedVerticalResolution: 1800,
-		 *				shippingBand: "Prints",
-		 *				sizeUnits: "inches"
-		 *			},
-		 *			{}
-		 *		],
-		 *		shippingRates: [
-		 *			{
-		 *				band: "Canvas",
-		 *				description: "Canvas tracked- UPS",
-		 *				isTracked: true,
-		 *				priceGBP: 700,
-		 *				priceUSD: 1100
-		 *			},
-		 *			{}
-		 *		]
-		 *	}
-		 * 2019-04-02
-		 * I have got a real response via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t01() test case:
-		 * {
-		 *		"country": "UNITED KINGDOM",
-		 *		"countryCode": "GB",
-		 *		"errorMessage": null,
-		 *		"items": {
-		 *			"0": {
-		 *				"attributes": [],
-		 *				"description": "10x10 inch print",
-		 *				"errorMessage": null,
-		 *				"fullProductHorizontalSize": 10,
-		 *				"fullProductVerticalSize": 10,
-		 *				"imageHorizontalSize": 10,
-		 *				"imageVerticalSize": 10,
-		 *				"itemType": "Print",
-		 *				"name": "10x10",
-		 *				"priceGBP": 200,
-		 *				"priceUSD": 261,
-		 *				"recommendedHorizontalResolution": 1500,
-		 *				"recommendedVerticalResolution": 1500,
-		 *				"shippingBand": "Prints",
-		 *				"sizeUnits": "inches"
-		 *			},
-		 *			<...>
-		 *		},
-		 *		"qualityLevel": "Pro",
-		 *		"shippingRates": [
-		 *			{
-		 *				"band": "LargePrints",
-		 *				"description": "1st Class Royal Mail",
-		 *				"isTracked": false,
-		 *				"priceGBP": 399,
-		 *				"priceUSD": 521
-		 *			},
-		 *			<...>
-		 *		]
-		 *	}
-		 */
-		$catalogue = $api->getCatalogue('GB', 'Pro'); /** @var array(string => mixed) $catalogue */
-		foreach (ikf_api_oi($o->getId(), Printer::PWINTY) as $mOI) { /** @var mOI $mOI */
-			$oi = $ev->oi(); /** @var OI $oi */
-			$mP = $mOI->mProduct(); /** @var mP $mP */
-			$pwintyProduct = $mP['pwinty_product_name'];
-			$frameColour = $mP['frame_colour'];
-			// 2019-02-27 TODO
-			$filesUploadPath = '';//AFD::path($oi, 'pwinty', $mP['product_label']);
-			$imgPath = explode('html/', $filesUploadPath);
-			$storeManager = df_o(IStoreManager::class);
-			$store = $storeManager->getStore(); /** @var Store $store */
-			$baseUrl = $store->getBaseUrl();
-			if ($filesUploadPath != '') {
-				$quantity = 0 ;
-				foreach (new \DirectoryIterator($filesUploadPath) as $key => $fileInfo) {
-					if ($fileInfo->isDot() || $fileInfo->isDir())
-					   continue;
-					if ($fileInfo->isFile() && $fileInfo->getExtension() != 'csv') {
-						$img = $baseUrl.$imgPath[1].'/'.$fileInfo->getFilename();
-						$imgAttribute = [];
-						$imgAttribute['url'] = $img;
-						$imgAttribute['sizing'] = "ShrinkToFit";
-						$imgAttribute['priceToUser'] = "0";
-						$imgAttribute['copies'] = $quantity+1;
-						$imgAttribute['type'] = $pwintyProduct;
-						foreach ($catalogue['items'] as $value) {
-							/**
-							 * 2019-03-19
-							 * $value has the following format:
-							 *	{
-							 *		attributes: [
-							 *			{
-							 *				name: "finish",
-							 *				validValues: ["matte", "glossy"]
-							 *			}
-							 *		],
-							 *		description: "10x12 Print",
-							 *		fullProductHorizontalSize: 10,
-							 *		fullProductVerticalSize: 12,
-							 *		imageHorizontalSize: 10,
-							 *		imageVerticalSize: 12,
-							 *		name: "10x12",
-							 *		priceGBP: 150,
-							 *		priceUSD: 350,
-							 *		recommendedHorizontalResolution: 1500,
-							 *		recommendedVerticalResolution: 1800,
-							 *		shippingBand: "Prints",
-							 *		sizeUnits: "inches"
-							 *	}   
-							 * 2019-04-02
-							 * I have got a real item with attributes
-							 * via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t02() test case:
-							 *	{
-							 *		"attributes": [
-							 *			{
-							 *				"name": "finish",
-							 *				"validValues": ["matte", "glossy"]
-							 *			}
-							 *		],
-							 *		"description": "5x5 inch print",
-							 *		"errorMessage": null,
-							 *		"fullProductHorizontalSize": 5,
-							 *		"fullProductVerticalSize": 5,
-							 *		"imageHorizontalSize": 5,
-							 *		"imageVerticalSize": 5,
-							 *		"itemType": "Print",
-							 *		"name": "5x5",
-							 *		"priceGBP": 60,
-							 *		"priceUSD": 78,
-							 *		"recommendedHorizontalResolution": 750,
-							 *		"recommendedVerticalResolution": 750,
-							 *		"shippingBand": "Prints",
-							 *		"sizeUnits": "inches"
-							 *	}
-							 */
-							if (
-								$frameColour
-								&& ($a = dfa($value, 'attributes'))
-								&& $pwintyProduct === $value['name']
-							) {
-								$imgAttribute['attributes'][$a[0]['name']] = strtolower($frameColour);
-							}
-						}
-						$imageArray[$oi->getId()] = $imgAttribute;
-						$quantity++;
-					}
-				}
-			}
-		}
-		$imageArray = array_values($imageArray);
-		$address = $o->getShippingAddress();
-		$postcode = $address->getPostcode();
-		$countryCode = $address->getCountryId();
-		$region = $address->getRegion();
-		if ($address->getCompany() != ''){
-			$street1 = $address->getCompany().','.$address->getStreet()[0];
-		} else {
-			$street1 = $address->getStreet()[0];
-		}
-		if (isset($address->getStreet()[1])) {
-			$street2 = $address->getStreet()[1];
-		} else{
-			$street2 = '';
-		}
-		$city = $address->getCity();
-		$customerId = $o->getCustomerId();
-		$customer = df_new_om(Customer::class)->load($customerId);
-		$name = $customer['firstname'].' '.$customer['lastname'];
-		$email = $customer['email'];
+		$images = array_merge(df_map(ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return
+			$this->pOI($mOI)
+		;}));
+		$sa = $o->getShippingAddress(); /** @var OA $sa */
+		$customer = df_customer($o); /** @var Customer $customer */
+		$api = ikf_pw_api($ev->store()); /** @var API $api */
 		$pOrder = $api->createOrder(// create order to pwinty
-			$name,          //name
-			$email,         //email address
-			$street1,    //address1
-			$street2,    //address 2
-			$city,          //town
-			$region,        //state
-			$postcode,      //postcode or zip
-			'GB',            //country code
-			$countryCode,    //destination code
-			true,            //tracked shipping
-			"InvoiceMe",     //payment method
-			"Pro"            //quality
+			df_cc_s($customer['firstname'], $customer['lastname']),
+			$customer['email'],
+			df_ccc(', ', $sa->getCompany(), $sa->getStreetLine(1)),
+			$sa->getStreetLine(2),
+			$sa->getCity(),
+			$sa->getRegion(),
+			$sa->getPostcode(),
+			'GB',
+			$sa->getCountryId(),
+			true,
+			'InvoiceMe', //payment method
+			'Pro' //quality
 		);
 		$zl = ikf_logger('pwinty_orders_status'); /** @var zL $zl */
 		$zl->info($pOrder);
@@ -249,30 +56,176 @@ final class AvailableForDownload {
 		//save pwinty id to custom table
 		$mOrderModel = df_new_om(mOrder::class);
 		$mOrderModelCollection = $mOrderModel->getCollection();
-		$mOrder = $mOrderModelCollection
-			->addFieldToFilter('magento_order_id', ['eq' => $ev->oidE()]);
+		$mOrder = $mOrderModelCollection->addFieldToFilter('magento_order_id', ['eq' => $ev->oidE()]);
 		foreach ($mOrder as $key => $value) {
 			$value->setPwintyOrderId($pwintyOrderId);
 			$value->save();
 		}
-		$photos =  $api->addPhotos( //add photos to order
-			$pwintyOrderId, //order id
-			$imageArray
-		);
+		/**
+		 * 2019-04-02
+		 * 1) «Add multiple photos to an order»: https://www.pwinty.com/api/2.2/#photos-create-multiple
+		 * 2) This API endpoint is absent in the latest Pwinty API version (3.0).
+		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
+		 */
+		$photos = $api->addPhotos($pwintyOrderId, array_values($images));
 		$zl->info($photos);
-		$getOrderStatus = $api->getOrderStatus(// check order status
-			$pwintyOrderId              //orderid
-			 //status
-		);
+		$getOrderStatus = $api->getOrderStatus($pwintyOrderId);
 		$zl->info($getOrderStatus);
-		if ($getOrderStatus['isValid'] == 1) {// submit order if no error
-			$api->updateOrderStatus(
-				$pwintyOrderId,              //orderid
-				"Submitted"         //status
-			);
-		} else {
+		if ($getOrderStatus['isValid'] == 1) {
+			$api->updateOrderStatus($pwintyOrderId, 'Submitted');
+		}
+		else {
 			$zl->info('order is not submitted');
 		}
+	}
+
+	/**
+	 * 2019-04-02
+	 * @used-by _p()
+	 * @param mOI $mOI
+	 * @return array(array(string => mixed))
+	 */
+    private function pOI(mOI $mOI) {
+    	$catalogueItems = ikf_pw_items(Ev::s()->store()); /** @var array(string => mixed) $catalogueItems */
+    	$r = []; /** @var array(string => mixed) $r */
+		$mP = $mOI->mProduct(); /** @var mP $mP */
+		if ($mP->sendJson() && ($files = $mOI->files())) { /** @var F[] $files */
+			/**
+			 * 2018-11-02 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
+			 * «Generate JSON data for photo-books»
+			 * https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/9
+			 * 2019-03-12
+			 * Data item examples:
+			 * 1)
+			 *		{
+			 *			"id": "photobook-jacket",
+			 *			"productId": "$(package:inkifi/photobooks)/products/hard-cover-gray-210x210mm-70",
+			 *			"plu": "INKIFI-HCB210-M-70",
+			 *			"quantity": 1,
+			 *			"url": "https://renderstouse.blob.core.windows.net/0c25168e-eda3-41d4-b266-8259566d2507/dust.pdf?sv=2018-03-28&sr=c&sig=XzCB%2B2CWlpqNFqVf6CnoVr8ICDGufTexaNqyzxMDUx8%3D&st=2018-11-02T19%3A36%3A41Z&se=2018-12-02T19%3A38%3A41Z&sp=r",
+			 *			"order": 0
+			 *		}
+			 * 2)
+			 *		{
+			 *			"id": "photobook-pages",
+			 *			"productId": "$(package:inkifi/photobooks)/products/hard-cover-gray-210x210mm-70",
+			 *			"plu": "INKIFI-HCB210-M-70",
+			 *			"quantity": 1,
+			 *			"url": "https://renderstouse.blob.core.windows.net/0c25168e-eda3-41d4-b266-8259566d2507/0d0e8542-db8d-475b-95bb-33156dc6551a_0c25168e-eda3-41d4-b266-8259566d2507.pdf?sv=2018-03-28&sr=c&sig=maMnPG2XIrQuLC3mArAgf3YKrM6EzFwNMggwApqMTeo%3D&st=2018-11-02T19%3A36%3A43Z&se=2018-12-02T19%3A38%3A43Z&sp=r",
+			 *			"order": 1
+			 *		}
+			*/
+			$oi = $mOI->oi(); /** @var OI $oi */
+			$pwintyProduct = $mP['pwinty_product_name']; /** @var string $pwintyProduct */
+			$frameColour = $mP['frame_colour'];
+			$quantity = 0; /** @var int $quantity */
+			foreach ($files as $f) { /** @var F $f */
+				$image = [
+					'copies' => 1 + $quantity
+					,'priceToUser' => '0'
+					,'sizing' => 'ShrinkToFit'
+					,'type' => $pwintyProduct
+					,'url' => $f->url()
+				]; /** @var array(string => string) $image */
+				if ($frameColour) {
+					foreach ($catalogueItems as $value) {
+						/**
+						 * 2019-03-19
+						 * $value has the following format:
+						 *	{
+						 *		attributes: [
+						 *			{
+						 *				name: "finish",
+						 *				validValues: ["matte", "glossy"]
+						 *			}
+						 *		],
+						 *		description: "10x12 Print",
+						 *		fullProductHorizontalSize: 10,
+						 *		fullProductVerticalSize: 12,
+						 *		imageHorizontalSize: 10,
+						 *		imageVerticalSize: 12,
+						 *		name: "10x12",
+						 *		priceGBP: 150,
+						 *		priceUSD: 350,
+						 *		recommendedHorizontalResolution: 1500,
+						 *		recommendedVerticalResolution: 1800,
+						 *		shippingBand: "Prints",
+						 *		sizeUnits: "inches"
+						 *	}
+						 * 2019-04-02
+						 * 1) I have got a real item with attributes
+						 * via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t02() test case:
+						 *	{
+						 *		"attributes": [
+						 *			{
+						 *				"name": "finish",
+						 *				"validValues": ["matte", "glossy"]
+						 *			}
+						 *		],
+						 *		"description": "5x5 inch print",
+						 *		"errorMessage": null,
+						 *		"fullProductHorizontalSize": 5,
+						 *		"fullProductVerticalSize": 5,
+						 *		"imageHorizontalSize": 5,
+						 *		"imageVerticalSize": 5,
+						 *		"itemType": "Print",
+						 *		"name": "5x5",
+						 *		"priceGBP": 60,
+						 *		"priceUSD": 78,
+						 *		"recommendedHorizontalResolution": 750,
+						 *		"recommendedVerticalResolution": 750,
+						 *		"shippingBand": "Prints",
+						 *		"sizeUnits": "inches"
+						 *	}
+						 * 1) I have got a real item with multiple attributes
+						 * via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t0s() test case:
+						 *	{
+						 *		"attributes": [
+						 *			{
+						 *				"name": "paper",
+						 *				"validValues": ["smooth_art", "cold_press_watercolour"]
+						 *			},
+						 *			{
+						 *				"name": "frame_colour",
+						 *				"validValues": [
+						 * 					"gold", "silver", "natural", "dark_brown", "black", "white"
+						 * 				]
+						 *			},
+						 *			{
+						 *				"name": "hanging_orientation",
+						 *				"validValues": ["portrait", "landscape"]
+						 *			},
+						 *			{
+						 *				"name": "glaze",
+						 *				"validValues": ["float_glass", "acrylic"]
+						 *			}
+						 *		],
+						 *		"description": "Box Framed, unmounted 24x48 fine art print",
+						 *		"errorMessage": null,
+						 *		"fullProductHorizontalSize": 24,
+						 *		"fullProductVerticalSize": 48,
+						 *		"imageHorizontalSize": 24,
+						 *		"imageVerticalSize": 48,
+						 *		"itemType": "Framed Poster",
+						 *		"name": "BoxFrame_24x48_Unmounted",
+						 *		"priceGBP": 9750,
+						 *		"priceUSD": 12735,
+						 *		"recommendedHorizontalResolution": 3600,
+						 *		"recommendedVerticalResolution": 7200,
+						 *		"shippingBand": "FramedPrints",
+						 *		"sizeUnits": "inches"
+						 *	}
+						 */
+						if (($a = dfa($value, 'attributes')) && $pwintyProduct === $value['name']) {
+							$image['attributes'][$a[0]['name']] = strtolower($frameColour);
+						}
+					}
+				}
+				$r[] = $image;
+				$quantity++;
+			}
+		}
+		return $r;
 	}
 
 	/**
