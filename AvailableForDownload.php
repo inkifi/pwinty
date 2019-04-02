@@ -42,7 +42,7 @@ final class AvailableForDownload {
 		 * 2019-03-19
 		 * 1) `$api->getCatalogue` is a legacy API call: https://www.pwinty.com/api/2.2/#products-list
 		 * It is absent in the latest Pwinty version (2.3.0).
-		 * 2) $catalogue has the following format:
+		 * 2) $catalogue has the following format (this example is from the official documentation):
 		 *	{
 		 *		"country": "United Kingdom",
 		 *		"countryCode": "GB",
