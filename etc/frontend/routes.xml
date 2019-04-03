@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<config
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd"
+>
+<!-- 2019-04-04 https://www.pwinty.com/api/#callbacks -->
+	<router id='standard'>
+		<route id='Inkifi_Pwinty' frontName='inkifi-pwinty'>
+			<module name='Inkifi_Pwinty'/>
+		</route>
+	</router>
+</config>

@@ -85,7 +85,7 @@ final class AvailableForDownload {
 		// 2019-04-03 «775277»
 		$pwintyOrderId = (int)$pOrder['id'];  /** @var int $pwintyOrderId*/
 		$mOrder = $ev->mo(); /** @var mOrder $mOrder */
-		/** 2019-04-03 @used-by \Mangoit\MediaclipHub\Controller\Index\PwintyOrderStatusUpdate::execute() */
+		/** 2019-04-03 @used-by \Inkifi\Pwinty\Controller\Index\Index::execute() */
 		$mOrder[mOrder::F__PWINTY_ORDER_ID] = $pwintyOrderId;
 		$mOrder->save();
 		/**
