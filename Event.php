@@ -18,7 +18,9 @@ final class Event extends \Df\API\Document {
 	 * or a shipment status changes.»
 	 * @return Shipment[]
 	 */
-	function shipments() {return $this['shipments'];}
+	function shipments() {return dfc($this, function() {return df_map(
+		$this['shipments'], function(array $a) {return new Shipment($a);}
+	);});}
 
 	/**
 	 * 2019-04-04
