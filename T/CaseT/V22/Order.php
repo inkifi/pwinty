@@ -4,12 +4,12 @@ use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Address as OA;
 // 2019-04-03
-final class Order extends \Inkifi\Pwinty\T\CaseT\V22 {
-	/** 2019-04-03 */
+final class Order extends \Inkifi\Pwinty\T\CaseT {
+	/** @test 2019-04-03 */
 	function t00() {}
 
 	/**
-	 * @test 2019-04-03
+	 * 2019-04-03
 	 * A response:
 	 * {
 	 *		"address1": "47 Wolverhampton Road",

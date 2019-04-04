@@ -1,7 +1,6 @@
 <?php
 namespace Inkifi\Pwinty\API;
 use Inkifi\Pwinty\Settings as S;
-use Zend_Http_Client as C;
 // 2019-04-04 https://www.pwinty.com/api
 final class Client extends \Df\API\Client {
 	/**
@@ -20,8 +19,12 @@ final class Client extends \Df\API\Client {
 	 * @used-by \Df\API\Client::_p()
 	 * @return array(string => string)
 	 */
-	protected function headers() {return [
-		'Accept' => 'application/json', 'Content-Type' => 'application/json'
+	protected function headers() {$s = $this->s(); /** @var S $s */ return [
+		'Accept' => 'application/json'
+		,'Content-Type' => 'application/json'
+		// 2019-04-04 https://www.pwinty.com/api#authentication
+		,'X-Pwinty-MerchantId' => $s->merchantID()
+		,'X-Pwinty-REST-API-Key' => $s->privateKey()
 	];}
 
 	/**
@@ -47,6 +50,7 @@ final class Client extends \Df\API\Client {
 
 	/**
 	 * 2019-04-04
+	 * @used-by headers()
 	 * @used-by urlBase()
 	 * @return S
 	 */

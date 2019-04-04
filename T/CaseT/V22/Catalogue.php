@@ -1,7 +1,7 @@
 <?php
 namespace Inkifi\Pwinty\T\CaseT\V22;
 // 2019-04-02
-final class Catalogue extends \Inkifi\Pwinty\T\CaseT\V22 {
+final class Catalogue extends \Inkifi\Pwinty\T\CaseT {
 	/** @test 2019-04-02 */
 	function t00() {}
 
