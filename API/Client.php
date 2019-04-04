@@ -9,7 +9,13 @@ final class Client extends \Df\API\Client {
 	 * @see \Df\API\Client::_construct()
 	 * @used-by \Df\API\Client::__construct()
 	 */
-	protected function _construct() {parent::_construct(); $this->reqJson();  $this->resJson();}
+	protected function _construct() {
+		parent::_construct();
+		$this->reqJson();
+		$this->resJson();
+		// 2019-04-04 A response: {"data": {<...>}, "statusCode": 200, "statusTxt": "OK"}
+		$this->resPath('data');
+	}
 
 	/**
 	 * 2019-04-04 https://www.pwinty.com/api#format
