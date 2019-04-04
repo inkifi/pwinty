@@ -4,7 +4,6 @@ use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
 use Inkifi\Mediaclip\API\Entity\Order\Item\File as F;
 use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
-use Inkifi\Pwinty\Setup\UpgradeSchema as Schema;
 use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Address as OA;
