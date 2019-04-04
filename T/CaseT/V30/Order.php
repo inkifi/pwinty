@@ -13,29 +13,41 @@ final class Order extends \Inkifi\Pwinty\T\CaseT {
 	 * @test 2019-04-04
 	 * https://www.pwinty.com/api#orders-create
 	 * A response:
-	 * {
-	 *		"address1": "47 Wolverhampton Road",
-	 *		"address2": "",
-	 *		"addressTownOrCity": "Dudley",
-	 *		"countryCode": "GB",
-	 *		"destinationCountryCode": "GB",
-	 *		"errorMessage": null,
-	 *		"id": 775277,
-	 *		"payment": "InvoiceMe",
-	 *		"paymentUrl": null,
-	 *		"photos": [],
-	 *		"postalOrZipCode": "DY3 1RG",
-	 *		"price": 0,
-	 *		"qualityLevel": "Pro",
-	 *		"recipientName": "Jessica Bowkley ",
-	 *		"shippingInfo": {
-	 *			"isTracked": false,
+	 *	{
+	 *		"data": {
+	 *			"address1": "47 Wolverhampton Road",
+	 *			"address2": "",
+	 *			"addressTownOrCity": "Dudley",
+	 *			"canCancel": true,
+	 *			"canHold": true,
+	 *			"canUpdateImages": false,
+	 *			"canUpdateShipping": true,
+	 *			"countryCode": "GB",
+	 *			"created": "2019-04-04T02:20:42.6217183Z",
+	 *			"errorMessage": null,
+	 *			"id": 775494,
+	 *			"images": [],
+	 *			"invoiceAmountNet": 0,
+	 *			"invoiceCurrency": null,
+	 *			"invoiceTax": 0,
+	 *			"lastUpdated": "2019-04-04T02:20:42.6217183Z",
+	 *			"merchantOrderId": "60055",
+	 *			"mobileTelephone": "07756595424",
+	 *			"payment": "InvoiceMe",
+	 *			"paymentUrl": null,
+	 *			"postalOrZipCode": "DY3 1RG",
+	 *			"preferredShippingMethod": "Standard",
 	 *			"price": 0,
-	 *			"trackingNumber": null,
-	 *			"trackingUrl": null
+	 *			"recipientName": "Jessica Bowkley ",
+	 *			"shippingInfo": {
+	 *				"price": 0,
+	 *				"shipments": []
+	 *			},
+	 *			"stateOrCounty": "England",
+	 *			"status": "NotYetSubmitted"
 	 *		},
-	 *		"stateOrCounty": "England",
-	 *		"status": "NotYetSubmitted"
+	 *		"statusCode": 200,
+	 *		"statusTxt": "OK"
 	 *	}
 	 */
 	function t01() {
