@@ -5,22 +5,19 @@ use Inkifi\Pwinty\API\Entity\Shipment;
 final class Event extends \Df\API\Document {
 	/**
 	 * 2019-04-04 «971961»
+	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return int
 	 */
 	function orderId() {return (int)$this['orderId'];}
 
 	/**
 	 * 2019-04-04
-	 * «Each shipment in the order.
-	 * Note that this can be empty if the shipments have not yet been allocated,
-	 * and it may change.
-	 * You will receive a callback each time a new shipment is created,
-	 * or a shipment status changes.»
+	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return Shipment[]
 	 */
-	function shipments() {return dfc($this, function() {return df_map(
-		$this['shipments'], function(array $a) {return new Shipment($a);}
-	);});}
+	function shipmentsShipped() {return dfc($this, function() {return
+		array_filter($this->shipments(), function(Shipment $s) {return $s->isShipped();})
+	;});}
 
 	/**
 	 * 2019-04-04
@@ -29,11 +26,24 @@ final class Event extends \Df\API\Document {
 	 * @return string
 	 */
 	function status() {return $this['status'];}
+
+	/**
+	 * 2019-04-04
+	 * «Each shipment in the order.
+	 * Note that this can be empty if the shipments have not yet been allocated,
+	 * and it may change.
+	 * You will receive a callback each time a new shipment is created,
+	 * or a shipment status changes.»
+	 * @used-by shipmentsShipped()
+	 * @return Shipment[]
+	 */
+	private function shipments() {return dfc($this, function() {return df_map(
+		$this['shipments'], function(array $a) {return new Shipment($a);}
+	);});}
 	
 	/**
-	 * 2019-02-24
-	 * @used-by \Inkifi\Mediaclip\H\Shipped::p()
-	 * @used-by \Mangoit\MediaclipHub\Controller\Index\OrderStatusUpdateEndpoint::ev()
+	 * 2019-04-04
+	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return Event
 	 */
 	static function s() {return dfcf(function() {return new self(df_json_decode(file_get_contents(

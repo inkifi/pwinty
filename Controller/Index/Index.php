@@ -1,6 +1,9 @@
 <?php
 namespace Inkifi\Pwinty\Controller\Index;
 use Df\Framework\W\Result\Text;
+use Df\Sales\Model\Order as DFO;
+use Inkifi\Pwinty\API\Entity\Shipment as pwShipment;
+use Inkifi\Pwinty\Event;
 use Magento\Framework\Exception\LocalizedException as LE;
 use Magento\Sales\Model\Convert\Order as Converter;
 use Magento\Sales\Model\Order as O;
@@ -28,54 +31,48 @@ class Index extends \Df\Framework\Action {
 	 * @return Text
 	 */
 	function execute() {
-		$d = df_json_decode(file_get_contents('php://input')); /** @var array(string => mixed) $d */
-		foreach (dfa($d, 'shipments', []) as $sh) { /** @var array(string => mixed) $sh */
-			if ($sh['status'] == 'shipped') {
-				// 2019-04-03 «775277»
-				$oidP = (int)$d['id']; /** @var int $oidP */
-				/**
-				 * 2019-04-03
-				 * The `pwinty_order_id` field is initialized by
-				 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
-				 */
-				$mOrder = mOrder::byPwintyOrderId($oidP); /** @var $mOrder $mOrder */
-				$order = $mOrder->o(); /** @var O $order */
-				if (!$order->canShip()) {
-					throw new LE(__('You can\'t create an shipment.'));
+		$e = Event::s(); /** @var Event $e */
+		foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
+			/**
+			 * 2019-04-03
+			 * The `pwinty_order_id` field is initialized by
+			 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
+			 */
+			$mOrder = mOrder::byPwintyOrderId($e->orderId()); /** @var $mOrder $mOrder */
+			$o = $mOrder->o(); /** @var O|DFO $o */
+			df_assert($o->canShip());
+			// 2019-04-03
+			// Currently, these values are only set to the database,
+			// but they are never retrieved from there.
+			$mOrder->trackingNumberSet($sh->trackingNumber());
+			$mOrder->trackingUrlSet($sh->trackingUrl());
+			$mOrder->save();
+			$converter = df_new_om(Converter::class); /** @var Converter $converter */
+			$shipment = $converter->toShipment($o); /** @var Shipment $shipment */
+			foreach ($o->getAllItems() as $oi) { /** @var OI $oi */
+				if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
+					$qtyShipped = $oi->getQtyToShip();
+					$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
+					$si->setQty($qtyShipped);
+					$shipment->addItem($si);
 				}
-				// 2019-04-03
-				// Currently, these values are only set to the database,
-				// but they are never retrieved from there.
-				$mOrder->trackingNumberSet($sh['trackingNumber']);
-				$mOrder->trackingUrlSet($sh['trackingUrl']);
-				$mOrder->save();
-				$converter = df_new_om(Converter::class); /** @var Converter $converter */
-				$shipment = $converter->toShipment($order); /** @var Shipment $shipment */
-				foreach ($order->getAllItems() as $oi) { /** @var OI $oi */
-					if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
-						$qtyShipped = $oi->getQtyToShip();
-						$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
-						$si->setQty($qtyShipped);
-						$shipment->addItem($si);
-					}
-				}
-				$shipment->register();
-				$shipment->getOrder()->setIsInProcess(true);
-				try {
-					$track = df_new_om(Track::class); /** @var Track $track */
-					$track->setCarrierCode('Pwinty');
-					$track->setDescription("Pwinty");
-					$track->setNumber($sh['trackingNumber']);
-					$track->setTitle('Pwinty');
-					$track->setUrl($sh['trackingUrl']);
-					$shipment->addTrack($track);
-					$shipment->save();
-					$shipment->getOrder()->save();
-					df_new_om(ShipmentNotifier::class)->notify($shipment);
-					$shipment->save();
-				} catch (\Exception $e) {
-					throw new LE(__($e->getMessage()));
-				}
+			}
+			$shipment->register();
+			$o->setIsInProcess(true);
+			try {
+				$track = df_new_om(Track::class); /** @var Track $track */
+				$track->setCarrierCode('Pwinty');
+				$track->setDescription("Pwinty");
+				$track->setNumber($sh->trackingNumber());
+				$track->setTitle('Pwinty');
+				$track->setUrl($sh['trackingUrl']);
+				$shipment->addTrack($track);
+				$shipment->save();
+				$shipment->getOrder()->save();
+				df_new_om(ShipmentNotifier::class)->notify($shipment);
+				$shipment->save();
+			} catch (\Exception $e) {
+				throw new LE(__($e->getMessage()));
 			}
 		}
 		return Text::i('OK');
