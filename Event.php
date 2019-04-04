@@ -23,6 +23,7 @@ final class Event extends \Df\API\Document {
 	 * 2019-04-04
 	 * «The current status of the order.
 	 * One of `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.»
+	 * Currently, it is never used.
 	 * @return string
 	 */
 	function status() {return $this['status'];}

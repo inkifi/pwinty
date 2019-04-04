@@ -11,7 +11,9 @@ final class Shipment extends \Df\API\Document {
 	function isShipped() {return 'Shipped' === $this['status'];}
 	
 	/**
-	 * 2019-04-04 «An array of item IDs included in the shipment».
+	 * 2019-04-04
+	 * «An array of item IDs included in the shipment».
+	 * Currently, it is never used.
 	 * @return int[]
 	 */
 	function items() {return df_int($this['items']);}
