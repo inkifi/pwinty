@@ -21,7 +21,7 @@ final class Validator extends \Df\API\Response\Validator {
 	 * @used-by \Df\API\Client::_p()
 	 * @return string|null
 	 */
-	function long() {return $this->r('data/errorMessage') ?: $this->r('statusTxt');}
+	function long() {return $this->r('errorMessage') ?: $this->r('statusTxt');}
 
 	/**
 	 * 2019-04-04
