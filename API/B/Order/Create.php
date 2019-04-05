@@ -45,6 +45,7 @@ final class Create {
 	 *		"status": "NotYetSubmitted"
 	 *	}
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage::t02()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Create::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t02()
