@@ -8,6 +8,7 @@ use Inkifi\Pwinty\API\Facade\Order as F;
 final class AddImage {
 	/**
 	 * 2019-04-06 https://www.pwinty.com/api/#images-add
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage::t01()
 	 * @param eOrder $o
 	 * @param array(string => mixed)$d
 	 * @return R
