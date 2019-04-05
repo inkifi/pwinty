@@ -1,39 +1,68 @@
 <?php
-namespace Inkifi\Pwinty\T\CaseT\V30;
-use Inkifi\Pwinty\API\B\Order\Create;
+namespace Inkifi\Pwinty\API\B\Order;
+use Df\API\FacadeOptions as FO;
+use Df\API\Operation as Op;
+use Inkifi\Pwinty\API\Entity\Order as eOrder;
 use Inkifi\Pwinty\API\Facade\Order as F;
 use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Address as OA;
-// 2019-04-04
-final class Order extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-04 */
-	function t00() {}
-
+// 2019-04-05
+final class Create {
 	/**
-	 * @test 2019-04-04
-	 */
-	function t01() {echo df_json_encode(Create::p(df_order(60055))->a());}
-
-	/**
-	 * 2019-04-04
+	 * 2019-04-05
 	 * https://www.pwinty.com/api#orders-create
+	 * A response:
+	 *	{
+	 *		"address1": "47 Wolverhampton Road",
+	 *		"address2": "",
+	 *		"addressTownOrCity": "Dudley",
+	 *		"canCancel": true,
+	 *		"canHold": true,
+	 *		"canUpdateImages": false,
+	 *		"canUpdateShipping": true,
+	 *		"countryCode": "GB",
+	 *		"created": "2019-04-04T02:51:28.8362052Z",
+	 *		"errorMessage": null,
+	 *		"id": 775498,
+	 *		"images": [],
+	 *		"invoiceAmountNet": 0,
+	 *		"invoiceCurrency": null,
+	 *		"invoiceTax": 0,
+	 *		"lastUpdated": "2019-04-04T02:51:28.8362052Z",
+	 *		"merchantOrderId": "60055",
+	 *		"mobileTelephone": "07756595424",
+	 *		"payment": "InvoiceMe",
+	 *		"paymentUrl": null,
+	 *		"postalOrZipCode": "DY3 1RG",
+	 *		"preferredShippingMethod": "Standard",
+	 *		"price": 0,
+	 *		"recipientName": "Jessica Bowkley ",
+	 *		"shippingInfo": {
+	 *			"price": 0,
+	 *			"shipments": []
+	 *		},
+	 *		"stateOrCounty": "England",
+	 *		"status": "NotYetSubmitted"
+	 *	}
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order::t01()
+	 * @param O $o
+	 * @return eOrder
 	 */
-	function t02() {
-		$o = df_order(60055); /** @var O $o */
+	static function p(O $o) {
 		$c = df_customer($o); /** @var Customer $c */
 		$a = $o->getShippingAddress(); /** @var OA $a */
-		echo df_json_encode(F::s($o)->post([
+		return F::s($o)->post([
 			// 2019-04-04 «First line of recipient address». Required.
-			'address1' => null
+			'address1' => $a->getStreetLine(1)
 			// 2019-04-04 «Second line of recipient address». Optional.
-			,'address2' => null
+			,'address2' => $a->getStreetLine(2)
 			// 2019-04-04 «Town or city of the recipient». Required.
-			,'addressTownOrCity' => null
+			,'addressTownOrCity' => $a->getCity()
 			// 2019-04-04 «Two-letter country code of the recipient». Required.
-			,'countryCode' => null
+			,'countryCode' => $a->getCountryId()
 			// 2019-04-04 «Customer's email address». Optional.
-			,'email' => null
+			,'email' => $c->getEmail()
 			// 2019-04-04
 			// «Used for orders where an invoice amount must be supplied (e.g. to Middle East)».
 			// Optional.
@@ -63,13 +92,13 @@ final class Order extends \Inkifi\Pwinty\T\CaseT {
 			// Required.
 			,'preferredShippingMethod' => 'Standard'
 			// 2019-04-04 «Recipient name». Required.
-			,'recipientName' => null
+			,'recipientName' => $c->getName()
 			// 2019-04-04 «State, county or region of the recipient». Required.
 			,'stateOrCounty' => $a->getRegion()
 			// 2019-04-04
 			// «Customer's non-mobile phone number for shipping updates and courier contact».
 			// Optional.
 			,'telephone' => $a->getTelephone()
-		])->a());
+		], null, null, FO::i()->resC(eOrder::class))->res();
 	}
 }

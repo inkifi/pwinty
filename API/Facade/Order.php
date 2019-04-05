@@ -1,9 +1,12 @@
 <?php
 namespace Inkifi\Pwinty\API\Facade;
-use Magento\Store\Model\Store;
 /**
  * 2019-04-04
- * @used-by ikf_api_oi()
+ * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
  * @method static Order s()
  */
-final class Order extends \Df\API\Facade {}
+final class Order extends \Df\API\Facade {
+	function validate() {
+
+	}
+}
