@@ -1,5 +1,6 @@
 <?php
 namespace Inkifi\Pwinty\API\Entity;
+use Magento\Sales\Model\Order as O;
 /**
  * 2019-04-05 https://www.pwinty.com/api#orders-create
  * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
@@ -37,4 +38,22 @@ namespace Inkifi\Pwinty\API\Entity;
  *		"status": "NotYetSubmitted"
  *	}
  */
-final class Order extends \Df\API\Document {}
+final class Order extends \Df\API\Document {
+	/**
+	 * 2019-04-05
+	 * @used-by \Inkifi\Pwinty\API\B\Order\AddImage::p()
+	 * @used-by \Inkifi\Pwinty\API\B\Order\Validate::p()
+	 * @return int
+	 */
+	function id() {return (int)$this['id'];}
+
+	/**
+	 * 2019-04-05
+	 * @used-by \Inkifi\Pwinty\API\B\Order\AddImage::p()
+	 * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
+	 * @used-by \Inkifi\Pwinty\API\B\Order\Validate::p()
+	 * @param O|null $v [optional]
+	 * @return O|null
+	 */
+	function magentoOrder($v = null) {return df_prop($this, $v);}
+}

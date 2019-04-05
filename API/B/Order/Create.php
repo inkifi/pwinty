@@ -1,8 +1,7 @@
 <?php
 namespace Inkifi\Pwinty\API\B\Order;
 use Df\API\FacadeOptions as FO;
-use Df\API\Operation as Op;
-use Inkifi\Pwinty\API\Entity\Order as eOrder;
+use Inkifi\Pwinty\API\Entity\Order as R;
 use Inkifi\Pwinty\API\Facade\Order as F;
 use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
@@ -45,14 +44,17 @@ final class Create {
 	 *		"stateOrCounty": "England",
 	 *		"status": "NotYetSubmitted"
 	 *	}
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Create::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t02()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t03()
 	 * @param O $o
-	 * @return eOrder
+	 * @return R
 	 */
 	static function p(O $o) {
 		$c = df_customer($o); /** @var Customer $c */
 		$a = $o->getShippingAddress(); /** @var OA $a */
-		return F::s($o)->post([
+		$r = F::s($o)->post([
 			// 2019-04-04 «First line of recipient address». Required.
 			'address1' => $a->getStreetLine(1)
 			// 2019-04-04 «Second line of recipient address». Optional.
@@ -99,6 +101,8 @@ final class Create {
 			// «Customer's non-mobile phone number for shipping updates and courier contact».
 			// Optional.
 			,'telephone' => $a->getTelephone()
-		], null, null, FO::i()->resC(eOrder::class))->res();
+		], null, FO::i()->resC(R::class))->res(); /** @var R $r */
+		$r->magentoOrder($o);
+		return $r;
 	}
 }

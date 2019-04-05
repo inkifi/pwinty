@@ -1,19 +1,19 @@
 <?php
-namespace Inkifi\Pwinty\T\CaseT\V30;
-use Inkifi\Pwinty\API\B\Order\Create;
+namespace Inkifi\Pwinty\T\CaseT\V30\Order;
+use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 use Inkifi\Pwinty\API\Facade\Order as F;
 use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Address as OA;
 // 2019-04-04
-final class Order extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-04 */
+final class Create extends \Inkifi\Pwinty\T\CaseT {
+	/** @test 2019-04-04 */
 	function t00() {}
 
 	/**
-	 * @test 2019-04-04
+	 * 2019-04-04
 	 */
-	function t01() {echo df_json_encode(Create::p(df_order(60055))->a());}
+	function t01() {echo df_json_encode(bCreate::p(df_order(60055))->a());}
 
 	/**
 	 * 2019-04-04
