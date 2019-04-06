@@ -4,6 +4,14 @@ use Inkifi\Pwinty\Settings as S;
 // 2019-04-04 https://www.pwinty.com/api
 final class Client extends \Df\API\Client {
 	/**
+	 * 2019-04-06
+	 * @used-by \Inkifi\Pwinty\API\Facade\Catalogue::adjustClient()
+	 * @param string|null $v [optional]
+	 * @return $this|string
+	 */
+	function version($v = null) {return df_prop($this, $v, '3.0');}
+
+	/**
 	 * 2019-04-04 https://www.pwinty.com/api#format
 	 * @override
 	 * @see \Df\API\Client::_construct()
@@ -51,7 +59,7 @@ final class Client extends \Df\API\Client {
 	 * @return string
 	 */
 	protected function urlBase() {return df_url_staged(
-		$this->s()->test(), 'https://{stage}.pwinty.com/v3.0', ['sandbox', 'api']
+		$this->s()->test(), "https://{stage}.pwinty.com/v{$this->version()}", ['sandbox', 'api']
 	);}
 
 	/**

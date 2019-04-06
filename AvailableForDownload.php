@@ -141,7 +141,6 @@ final class AvailableForDownload {
 			 *			"order": 1
 			 *		}
 			*/
-			$oi = $mOI->oi(); /** @var OI $oi */
 			$pwintyProduct = $mP['pwinty_product_name']; /** @var string $pwintyProduct */
 			$frameColour = $mP['frame_colour'];
 			$quantity = 0; /** @var int $quantity */
