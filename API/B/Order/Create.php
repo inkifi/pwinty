@@ -9,9 +9,9 @@ use Magento\Sales\Model\Order\Address as OA;
 // 2019-04-05
 final class Create {
 	/**
-	 * 2019-04-05
-	 * https://www.pwinty.com/api#orders-create
-	 * A response:
+	 * 2019-04-05 https://www.pwinty.com/api#orders-create
+	 * 2019-04-06 https://www.pwinty.com/api/2.6/#orders-create
+	 * 1) A response from API 3.0:
 	 *	{
 	 *		"address1": "47 Wolverhampton Road",
 	 *		"address2": "",
@@ -44,12 +44,47 @@ final class Create {
 	 *		"stateOrCounty": "England",
 	 *		"status": "NotYetSubmitted"
 	 *	}
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage::t01()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage::t02()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Create::t01()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t01()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t02()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t03()
+	 * 2) A response from API 2.6:
+	 *	{
+	 *		"address1": "47 Wolverhampton Road",
+	 *		"address2": "",
+	 *		"addressTownOrCity": "Dudley",
+	 *		"canCancel": true,
+	 *		"canHold": true,
+	 *		"canUpdateImages": false,
+	 *		"canUpdateShipping": true,
+	 *		"countryCode": "GB",
+	 *		"created": "2019-04-06T01:59:03.1440157Z",
+	 *		"destinationCountryCode": "GB",
+	 *		"errorMessage": null,
+	 *		"id": 775896,
+	 *		"invoiceAmountNet": 0,
+	 *		"invoiceCurrency": "GBP",
+	 *		"invoiceTax": 0,
+	 *		"lastUpdated": "2019-04-06T01:59:03.1440157Z",
+	 *		"merchantOrderId": "60055",
+	 *		"mobileTelephone": "07756595424",
+	 *		"payment": "InvoiceMe",
+	 *		"paymentUrl": null,
+	 *		"photos": [],
+	 *		"postalOrZipCode": "DY3 1RG",
+	 *		"preferredShippingMethod": "PRIORITY",
+	 *		"price": 0,
+	 *		"qualityLevel": "Pro",
+	 *		"recipientName": "Jessica Bowkley ",
+	 *		"shippingInfo": {
+	 *			"price": 0,
+	 *			"shipments": []
+	 *		},
+	 *		"stateOrCounty": "England",
+	 *		"status": "NotYetSubmitted"
+	 *	}
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImage::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImage::t02()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Create::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t02()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t03()
 	 * @param O $o
 	 * @return R
 	 */
@@ -63,8 +98,14 @@ final class Create {
 			,'address2' => $a->getStreetLine(2)
 			// 2019-04-04 «Town or city of the recipient». Required.
 			,'addressTownOrCity' => $a->getCity()
-			// 2019-04-04 «Two-letter country code of the recipient». Required.
+			// 2019-04-04
+			// API 3.0: «Two-letter country code of the recipient». Required.
+			// API 2.6: «Two-letter country code where the order should be printed.». Required.
 			,'countryCode' => $a->getCountryId()
+			// 2019-04-06
+			// API 3.0: Absent.
+			// API 2.6: «Two-letter country code of the recipient». Required.
+			,'destinationCountryCode' => $a->getCountryId()
 			// 2019-04-04 «Customer's email address». Optional.
 			,'email' => $c->getEmail()
 			// 2019-04-04
@@ -86,23 +127,34 @@ final class Create {
 			// Optional.
 			,'mobileTelephone' => $a->getTelephone()
 			// 2019-04-04
+			// API 3.0:
 			// «Payment option for order, either `InvoiceMe` or `InvoiceRecipient`. Default `InvoiceMe`».
 			// Optional.
+			// API 2.6: Required.
 			,'payment' => 'InvoiceMe'
 			// 2019-04-04 «Postal or zip code of the recipient». Required.
 			,'postalOrZipCode' => $a->getPostcode()
-			// 2019-04-04
-			// «Possible values are `Budget`, `Standard`, `Express`, and `Overnight`».
-			// Required.
-			,'preferredShippingMethod' => 'Standard'
+			/**
+			 * 2019-04-04
+			 * API 3.0:
+			 * «Possible values are `Budget`, `Standard`, `Express`, and `Overnight`». Required.
+			 * 2019-04-06
+			 * API 2.6:
+			 * «Standard values are CHEAPEST or PRIORITY, contact us for more details». Optional.
+			 */
+			,'preferredShippingMethod' => 'PRIORITY'
+			// 2019-04-06
+			// API 3.0: Absent.
+			// API 2.6: «Quality Level for order, either `Pro` or `Standard`». Required.
+			,'qualityLevel' => 'Pro'
 			// 2019-04-04 «Recipient name». Required.
 			,'recipientName' => $c->getName()
 			// 2019-04-04 «State, county or region of the recipient». Required.
 			,'stateOrCounty' => $a->getRegion()
-			// 2019-04-04
-			// «Customer's non-mobile phone number for shipping updates and courier contact».
-			// Optional.
-			,'telephone' => $a->getTelephone()
+			// 2019-04-06
+			// API 3.0: Absent.
+			// API 2.6: «Whether to upgrade to a tracked shipping service when available». Optional.
+			,'useTrackedShipping' => true
 		], null, FO::i()->resC(R::class))->res(); /** @var R $r */
 		$r->magentoOrder($o);
 		return $r;

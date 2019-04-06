@@ -1,6 +1,6 @@
 {
 	"name": "inkifi/pwinty"
-	,"version": "0.0.4"
+	,"version": "0.0.5"
 	,"description": "A custom integration between inkifi.com and Pwinty"
 	,"type": "magento2-module"
 	,"homepage": "https://github.com/inkifi/pwinty"

@@ -1,5 +1,5 @@
 <?php
-namespace Inkifi\Pwinty\T\CaseT\V30;
+namespace Inkifi\Pwinty\T\CaseT\V26;
 use Inkifi\Pwinty\API\B\Catalogue as bCatalogue;
 // 2019-04-06
 final class Catalogue extends \Inkifi\Pwinty\T\CaseT {

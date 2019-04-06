@@ -1,5 +1,5 @@
 <?php
-namespace Inkifi\Pwinty\T\CaseT\V30\Order;
+namespace Inkifi\Pwinty\T\CaseT\V26\Order;
 use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 use Inkifi\Pwinty\API\B\Order\Validate as bValidate;
 // 2019-04-05

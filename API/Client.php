@@ -9,7 +9,7 @@ final class Client extends \Df\API\Client {
 	 * @param string|null $v [optional]
 	 * @return $this|string
 	 */
-	function version($v = null) {return df_prop($this, $v, '3.0');}
+	function version($v = null) {return df_prop($this, $v, '2.6');}
 
 	/**
 	 * 2019-04-04 https://www.pwinty.com/api#format

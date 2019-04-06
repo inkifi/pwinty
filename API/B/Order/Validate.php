@@ -9,10 +9,10 @@ final class Validate {
 	/**
 	 * 2019-04-05
 	 * https://www.pwinty.com/api/#orders-validate
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Create::t01()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t01()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t02()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t03()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Create::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t02()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t03()
 	 * @param eOrder $o
 	 * @return R
 	 */

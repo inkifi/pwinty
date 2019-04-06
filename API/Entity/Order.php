@@ -2,9 +2,10 @@
 namespace Inkifi\Pwinty\API\Entity;
 use Magento\Sales\Model\Order as O;
 /**
- * 2019-04-05 https://www.pwinty.com/api#orders-create
- * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
- * A response:
+ * 2019-04-06
+ * https://www.pwinty.com/api#orders-create
+ * https://www.pwinty.com/api/2.6/#orders-create
+ * 1) A response from API 3.0:
  *	{
  *		"address1": "47 Wolverhampton Road",
  *		"address2": "",
@@ -37,6 +38,42 @@ use Magento\Sales\Model\Order as O;
  *		"stateOrCounty": "England",
  *		"status": "NotYetSubmitted"
  *	}
+ * 2) A response from API 2.6:
+ *	{
+ *		"address1": "47 Wolverhampton Road",
+ *		"address2": "",
+ *		"addressTownOrCity": "Dudley",
+ *		"canCancel": true,
+ *		"canHold": true,
+ *		"canUpdateImages": false,
+ *		"canUpdateShipping": true,
+ *		"countryCode": "GB",
+ *		"created": "2019-04-06T01:59:03.1440157Z",
+ *		"destinationCountryCode": "GB",
+ *		"errorMessage": null,
+ *		"id": 775896,
+ *		"invoiceAmountNet": 0,
+ *		"invoiceCurrency": "GBP",
+ *		"invoiceTax": 0,
+ *		"lastUpdated": "2019-04-06T01:59:03.1440157Z",
+ *		"merchantOrderId": "60055",
+ *		"mobileTelephone": "07756595424",
+ *		"payment": "InvoiceMe",
+ *		"paymentUrl": null,
+ *		"photos": [],
+ *		"postalOrZipCode": "DY3 1RG",
+ *		"preferredShippingMethod": "PRIORITY",
+ *		"price": 0,
+ *		"qualityLevel": "Pro",
+ *		"recipientName": "Jessica Bowkley ",
+ *		"shippingInfo": {
+ *			"price": 0,
+ *			"shipments": []
+ *		},
+ *		"stateOrCounty": "England",
+ *		"status": "NotYetSubmitted"
+ *	}
+ * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
  */
 final class Order extends \Df\API\Document {
 	/**
