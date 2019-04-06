@@ -18,10 +18,11 @@ final class Validator extends \Df\API\Response\Validator {
 	 * 2019-04-04
 	 * @override
 	 * @see \Df\API\Exception::long()
+	 * @used-by valid()
 	 * @used-by \Df\API\Client::_p()
 	 * @return string|null
 	 */
-	function long() {return $this->r('errorMessage') ?: $this->r('statusTxt');}
+	function long() {return $this->r('errorMessage') ?: dftr($this->r('statusTxt'), ['OK' => null]);}
 
 	/**
 	 * 2019-04-04
@@ -30,5 +31,8 @@ final class Validator extends \Df\API\Response\Validator {
 	 * @used-by \Df\API\Client::_p()
 	 * @return bool
 	 */
-	function valid() {return 200 === $this->r('statusCode');}
+	function valid() {
+		$r = $this->r('statusCode'); /** @var int|null $r */
+		return 200 === $r || (is_null($r) && !$this->long());
+	}
 }

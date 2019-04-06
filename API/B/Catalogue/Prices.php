@@ -11,5 +11,8 @@ final class Prices {
 	 * @param S $s
 	 * @return D
 	 */
-	static function p(S $s) {return F::s()->post([], "{$s->getCode()}/prices")->res();}
+	static function p(S $s) {
+		$c = dftr($s->getCode(), ['uk' => 'gb']); /** @var string $c */
+		return F::s()->post(['skus' => []], "$c/prices")->res();
+	}
 }
