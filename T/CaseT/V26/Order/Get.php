@@ -9,7 +9,7 @@ final class Get extends \Inkifi\Pwinty\T\CaseT {
 	/** @test 2019-04-08 */
 	function t00() {}
 
-	/** @test 2019-04-08 */
+	/** 2019-04-08 */
 	function t01() {
 		$eO = bCreate::p(df_order(60055)); /** @var eO $eO */
 		bAddImage::p($eO, [

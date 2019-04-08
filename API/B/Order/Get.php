@@ -7,6 +7,8 @@ use Inkifi\Pwinty\API\Facade\Order as F;
 final class Get {
 	/**
 	 * 2019-04-08 https://www.pwinty.com/api/2.6/#orders-get
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Get::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Submit::t02()
 	 * @param eOrder $o
 	 * @return eOrder
 	 */

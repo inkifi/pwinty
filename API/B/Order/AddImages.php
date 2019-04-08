@@ -1,11 +1,10 @@
 <?php
 namespace Inkifi\Pwinty\API\B\Order;
-use Df\API\FacadeOptions as FO;
-use Inkifi\Pwinty\API\Entity\Image as R;
+use Df\API\Document as D;
 use Inkifi\Pwinty\API\Entity\Order as eOrder;
 use Inkifi\Pwinty\API\Facade\Order as F;
-// 2019-04-06
-final class AddImage {
+// 2019-04-08
+final class AddImages {
 	/**
 	 * 2019-04-06 https://www.pwinty.com/api/#images-add
 	 * A response:
@@ -29,9 +28,9 @@ final class AddImage {
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Get::t01()
 	 * @param eOrder $o
 	 * @param array(string => mixed)$d
-	 * @return R
+	 * @return D
 	 */
 	static function p(eOrder $o, array $d) {return F::s($o->magentoOrder())->post(
-		$d, "{$o->id()}/Photos", FO::i()->resC(R::class)
+		$d, "{$o->id()}/Photos/Batch"
 	)->res();}
 }

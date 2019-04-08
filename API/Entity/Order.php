@@ -79,6 +79,7 @@ final class Order extends \Df\API\Document {
 	/**
 	 * 2019-04-05
 	 * @used-by \Inkifi\Pwinty\API\B\Order\AddImage::p()
+	 * @used-by \Inkifi\Pwinty\API\B\Order\AddImages::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Get::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Submit::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Validate::p()
@@ -89,6 +90,7 @@ final class Order extends \Df\API\Document {
 	/**
 	 * 2019-04-05
 	 * @used-by \Inkifi\Pwinty\API\B\Order\AddImage::p()
+	 * @used-by \Inkifi\Pwinty\API\B\Order\AddImages::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Get::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Submit::p()
