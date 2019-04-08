@@ -7,6 +7,8 @@ namespace Inkifi\Pwinty\T;
  * @see \Inkifi\Pwinty\T\CaseT\V26\Catalogue
  * @see \Inkifi\Pwinty\T\CaseT\V26\Order\AddImage
  * @see \Inkifi\Pwinty\T\CaseT\V26\Order\Create
+ * @see \Inkifi\Pwinty\T\CaseT\V26\Order\Get
+ * @see \Inkifi\Pwinty\T\CaseT\V26\Order\Submit
  * @see \Inkifi\Pwinty\T\CaseT\V26\Order\Validate
  */
 abstract class CaseT extends \Df\Core\TestCase {}
