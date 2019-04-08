@@ -10,6 +10,21 @@ namespace Inkifi\Pwinty\API\Entity\Order;
  *		"isValid": false,
  *		"photos": []
  *	}
+ * 2019-04-07
+ * Other data example:
+ *	{
+ *		"generalErrors": [],
+ *		"id": "776007",
+ *		"isValid": true,
+ *		"photos": [
+ *			{
+ *				"errors": [],
+ *				"id": 986282,
+ *				"warnings": ["CouldNotValidateImageSize", "CouldNotValidateAspectRatio"]
+ *			}
+ *		]
+ *	}
+ * https://www.pwinty.com/api/2.6/#photo-warnings
  */
 final class ValidationResult extends \Df\API\Document {
 	/**

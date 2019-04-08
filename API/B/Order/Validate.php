@@ -7,8 +7,7 @@ use Inkifi\Pwinty\API\Facade\Order as F;
 // 2019-04-05
 final class Validate {
 	/**
-	 * 2019-04-05
-	 * https://www.pwinty.com/api/#orders-validate
+	 * 2019-04-05 https://www.pwinty.com/api/#orders-validate
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Create::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t02()
