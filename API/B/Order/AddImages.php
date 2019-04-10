@@ -45,11 +45,13 @@ final class AddImages {
 	 *	}
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImages::t01()
 	 * @param eOrder $o
-	 * @param array(string => mixed) $d
+	 * @param eImage[] $images
 	 * @return eImage[]
 	 */
-	static function p(eOrder $o, array $d) {return array_map(
+	static function p(eOrder $o, array $images) {return array_map(
 		function(array $i) {return new eImage($i);}
-		,F::s($o->magentoOrder())->post($d, "{$o->id()}/Photos/Batch")['items']
+		,F::s($o->magentoOrder())->post(
+			array_map(function(eImage $i) {return $i->a();}, $images), "{$o->id()}/Photos/Batch"
+		)['items']
 	);}
 }
