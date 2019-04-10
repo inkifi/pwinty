@@ -43,9 +43,7 @@ final class AddImages {
 	 *			}
 	 *		]
 	 *	}
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImage::t01()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImage::t02()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Get::t01()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImages::t01()
 	 * @param eOrder $o
 	 * @param array(string => mixed) $d
 	 * @return eImage[]

@@ -28,9 +28,6 @@ final class AvailableForDownload {
 		// «Modify orders numeration for Mediaclip»
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
 		$o = $ev->o(); /** @var O $o */
-		$images = array_merge(df_map(ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return
-			$this->pOI($mOI)
-		;}));
 		$api = ikf_pw_api($ev->store()); /** @var API $api */
 		/**
 		 * 2019-04-02
@@ -70,6 +67,9 @@ final class AvailableForDownload {
 		 * 2) This API endpoint is absent in the latest Pwinty API version (3.0).
 		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
 		 */
+		$images = array_merge(df_map(ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return
+			$this->pOI($mOI)
+		;}));
 		$api->addPhotos($pwOid, array_values($images));
 		$getOrderStatus = $api->getOrderStatus($pwOid);
 		if ($getOrderStatus['isValid'] == 1) {

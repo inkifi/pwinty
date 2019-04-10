@@ -30,9 +30,21 @@ final class Image extends \Df\API\Document {
 	 * 2) «An object with properties representing the attributes for the photo.
 	 * For valid attributes see the product list.»
 	 * https://www.pwinty.com/api/2.6/#photos-create
-	 * @return string[]
+	 * @param string[]|null $v [optional]
+	 * @return string[]|$this
 	 */
-	function attributes() {return $this[__FUNCTION__];}
+	function attributes($v = null) {return df_prop($this, $v);}
+
+	/**
+	 * 2019-04-10
+	 * «Number of copies of the photo to include in the order».
+	 * https://www.pwinty.com/api/2.6/#photos-get
+	 * https://www.pwinty.com/api/2.6/#photos-create
+	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * @param int|null $v [optional]
+	 * @return int|$this
+	 */
+	function copies($v = null) {return df_prop($this, $v, 'int');}
 
 	/**
 	 * 2019-04-07
@@ -41,4 +53,17 @@ final class Image extends \Df\API\Document {
 	 * @return int «986207»
 	 */
 	function id() {return (int)$this[__FUNCTION__];}
+
+	/**
+	 * 2019-04-10
+	 * 1) «How the image should be resized when printing».
+	 * https://www.pwinty.com/api/2.6/#photos-get
+	 * https://www.pwinty.com/api/2.6/#photos-create
+	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * 2) `Crop`, `ShrinkToFit`, `ShrinkToExactFit`
+	 * https://www.pwinty.com/api/2.6/#photos-resizing
+	 * @param string|null $v [optional]
+	 * @return string|$this
+	 */
+	function sizing($v = null) {return df_prop($this, $v);}
 }
