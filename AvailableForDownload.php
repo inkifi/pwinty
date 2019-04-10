@@ -68,7 +68,7 @@ final class AvailableForDownload {
 		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
 		 */
 		$images = array_merge(df_map(ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return
-			$this->pOI($mOI)
+			$this->images($mOI)
 		;}));
 		$api->addPhotos($pwOid, array_values($images));
 		$getOrderStatus = $api->getOrderStatus($pwOid);
@@ -79,11 +79,14 @@ final class AvailableForDownload {
 
 	/**
 	 * 2019-04-02
+	 * 2019-04-10
+	 * An order item is usally assotiated with multiple images
+	 * because most of printing products require multiple images from customers.
 	 * @used-by _p()
 	 * @param mOI $mOI
 	 * @return array(array(string => mixed))
 	 */
-    private function pOI(mOI $mOI) {
+    private function images(mOI $mOI) {
     	/** @var array(string => mixed) $catalogueItems */
     	$catalogueItems = bCatalogue::p(Ev::s()->store());
     	$r = []; /** @var array(string => mixed) $r */

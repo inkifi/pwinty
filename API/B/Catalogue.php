@@ -86,7 +86,7 @@ final class Catalogue {
 	 *		]
 	 *	}
 	 * 2019-04-06 https://www.pwinty.com/api/2.6/#products-list
-	 * @used-by \Inkifi\Pwinty\AvailableForDownload::pOI()
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t02()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t03()
