@@ -8,7 +8,9 @@ use Inkifi\Pwinty\API\B\Catalogue as bCatalogue;
 use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 use Inkifi\Pwinty\API\Entity\Image as eImage;
 use Inkifi\Pwinty\API\Entity\Order as eOrder;
+use Inkifi\Pwinty\API\Entity\Product as eProduct;
 use Magento\Sales\Model\Order as O;
+use Magento\Store\Model\Store as S;
 use Mangoit\MediaclipHub\Model\Product as mP;
 use pwinty\PhpPwinty as API;
 // 2019-02-24
@@ -88,11 +90,10 @@ final class AvailableForDownload {
 	 * @return eImage[]
 	 */
     private function images(mOI $mOI) {
-    	/** @var array(string => mixed) $catalogueItems */
-    	$catalogueItems = bCatalogue::p(Ev::s()->store());
     	$r = []; /** @var array(string => mixed) $r */
 		$mP = $mOI->mProduct(); /** @var mP $mP */
-		if ($mP->sendJson() && ($files = $mOI->files())) { /** @var F[] $files */
+		if ($mP->sendJson() && ($files = $mOI->files()) && ($pwProduct = $mP->pwintyProduct($s))) {
+			/** @var F[] $files */ /** @var eProduct|null $pwProduct */
 			/**
 			 * 2018-11-02 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
 			 * «Generate JSON data for photo-books»
@@ -118,112 +119,19 @@ final class AvailableForDownload {
 			 *			"order": 1
 			 *		}
 			*/
-			$pwintyProduct = $mP->pwintyProduct(); /** @var string $pwintyProduct */
 			$frameColour = $mP->frameColor();
-			$quantity = 0; /** @var int $quantity */
+			$hasFrameColor = $pwProduct->hasFrameColor(); /** @var bool $hasFrameColor */
 			foreach ($files as $f) { /** @var F $f */
 				$image = (new eImage)
-					->copies(1 + $quantity)
+					->copies($mOI->oi()->getQtyOrdered())
 					->sizing('ShrinkToFit')
-					->type($pwintyProduct)
+					->type($pwProduct->name())
 					->url($f->url())
 				;  /** @var eImage $image */
-				if ($frameColour) {
-					foreach ($catalogueItems as $value) {
-						/**
-						 * 2019-03-19
-						 * $value has the following format:
-						 *	{
-						 *		attributes: [
-						 *			{
-						 *				name: "finish",
-						 *				validValues: ["matte", "glossy"]
-						 *			}
-						 *		],
-						 *		description: "10x12 Print",
-						 *		fullProductHorizontalSize: 10,
-						 *		fullProductVerticalSize: 12,
-						 *		imageHorizontalSize: 10,
-						 *		imageVerticalSize: 12,
-						 *		name: "10x12",
-						 *		priceGBP: 150,
-						 *		priceUSD: 350,
-						 *		recommendedHorizontalResolution: 1500,
-						 *		recommendedVerticalResolution: 1800,
-						 *		shippingBand: "Prints",
-						 *		sizeUnits: "inches"
-						 *	}
-						 * 2019-04-02
-						 * 1) I have got a real item with attributes
-						 * via the @see \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t02() test case:
-						 *	{
-						 *		"attributes": [
-						 *			{
-						 *				"name": "finish",
-						 *				"validValues": ["matte", "glossy"]
-						 *			}
-						 *		],
-						 *		"description": "5x5 inch print",
-						 *		"errorMessage": null,
-						 *		"fullProductHorizontalSize": 5,
-						 *		"fullProductVerticalSize": 5,
-						 *		"imageHorizontalSize": 5,
-						 *		"imageVerticalSize": 5,
-						 *		"itemType": "Print",
-						 *		"name": "5x5",
-						 *		"priceGBP": 60,
-						 *		"priceUSD": 78,
-						 *		"recommendedHorizontalResolution": 750,
-						 *		"recommendedVerticalResolution": 750,
-						 *		"shippingBand": "Prints",
-						 *		"sizeUnits": "inches"
-						 *	}
-						 * 1) I have got a real item with multiple attributes
-						 * via the @see \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t0s() test case:
-						 *	{
-						 *		"attributes": [
-						 *			{
-						 *				"name": "paper",
-						 *				"validValues": ["smooth_art", "cold_press_watercolour"]
-						 *			},
-						 *			{
-						 *				"name": "frame_colour",
-						 *				"validValues": [
-						 * 					"gold", "silver", "natural", "dark_brown", "black", "white"
-						 * 				]
-						 *			},
-						 *			{
-						 *				"name": "hanging_orientation",
-						 *				"validValues": ["portrait", "landscape"]
-						 *			},
-						 *			{
-						 *				"name": "glaze",
-						 *				"validValues": ["float_glass", "acrylic"]
-						 *			}
-						 *		],
-						 *		"description": "Box Framed, unmounted 24x48 fine art print",
-						 *		"errorMessage": null,
-						 *		"fullProductHorizontalSize": 24,
-						 *		"fullProductVerticalSize": 48,
-						 *		"imageHorizontalSize": 24,
-						 *		"imageVerticalSize": 48,
-						 *		"itemType": "Framed Poster",
-						 *		"name": "BoxFrame_24x48_Unmounted",
-						 *		"priceGBP": 9750,
-						 *		"priceUSD": 12735,
-						 *		"recommendedHorizontalResolution": 3600,
-						 *		"recommendedVerticalResolution": 7200,
-						 *		"shippingBand": "FramedPrints",
-						 *		"sizeUnits": "inches"
-						 *	}
-						 */
-						if (($a = dfa($value, 'attributes')) && $pwintyProduct === $value['name']) {
-							$image['attributes'][$a[0]['name']] = strtolower($frameColour);
-						}
-					}
+				if ($frameColour && $hasFrameColor) {
+					$image->attributes(['frame_colour' => strtolower($frameColour)]);
 				}
 				$r[] = $image;
-				$quantity++;
 			}
 		}
 		return $r;

@@ -1,9 +1,21 @@
 <?php
 namespace Inkifi\Pwinty\API\B;
+use Inkifi\Pwinty\API\Entity\Product as eProduct;
 use Inkifi\Pwinty\API\Facade\Catalogue as F;
 use Magento\Store\Model\Store as S;
 // 2019-04-06
 final class Catalogue {
+	/**
+	 * 2019-04-11
+	 * @used-by \Mangoit\MediaclipHub\Model\Product::pwintyProduct()
+	 * @param string $name
+	 * @param S $s
+	 * @return eProduct
+	 */
+	static function get($name, S $s) {return dfcf(function($name) use($s) {return
+		new eProduct(self::p($s)[$name])
+	;}, [$name], $s->getCode());}
+
 	/**
 	 * 2019-03-19
 	 * 1) `$api->getCatalogue` is a legacy API call: https://www.pwinty.com/api/2.2/#products-list
@@ -89,6 +101,7 @@ final class Catalogue {
 	 * 2019-04-11
 	 * Products names are uniqie among all products:
 	 * https://github.com/inkifi/pwinty/blob/0.0.6/T/CaseT/V26/Catalogue.php#L86-L100
+	 * @used-by get()
 	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t02()

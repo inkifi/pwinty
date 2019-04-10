@@ -30,6 +30,7 @@ final class Image extends \Df\API\Document {
 	 * 2) «An object with properties representing the attributes for the photo.
 	 * For valid attributes see the product list.»
 	 * https://www.pwinty.com/api/2.6/#photos-create
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @param string[]|null $v [optional]
 	 * @return string[]|$this
 	 */
