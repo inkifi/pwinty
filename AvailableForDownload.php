@@ -117,8 +117,8 @@ final class AvailableForDownload {
 			 *			"order": 1
 			 *		}
 			*/
-			$pwintyProduct = $mP['pwinty_product_name']; /** @var string $pwintyProduct */
-			$frameColour = $mP['frame_colour'];
+			$pwintyProduct = $mP->pwintyProduct(); /** @var string $pwintyProduct */
+			$frameColour = $mP->frameColor();
 			$quantity = 0; /** @var int $quantity */
 			foreach ($files as $f) { /** @var F $f */
 				$image = [
