@@ -66,4 +66,26 @@ final class Image extends \Df\API\Document {
 	 * @return string|$this
 	 */
 	function sizing($v = null) {return df_prop($this, $v);}
+
+	/**
+	 * 2019-04-10
+	 * «Type of photo».
+	 * https://www.pwinty.com/api/2.6/#photos-get
+	 * https://www.pwinty.com/api/2.6/#photos-create
+	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * @param string|null $v [optional]
+	 * @return string|$this
+	 */
+	function type($v = null) {return df_prop($this, $v);}
+
+	/**
+	 * 2019-04-10
+	 * «If photo is to be downloaded by Pwinty, the photo's URL».
+	 * https://www.pwinty.com/api/2.6/#photos-get
+	 * https://www.pwinty.com/api/2.6/#photos-create
+	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * @param string|null $v [optional]
+	 * @return string|$this
+	 */
+	function url($v = null) {return df_prop($this, $v);}
 }
