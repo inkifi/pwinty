@@ -86,6 +86,9 @@ final class Catalogue {
 	 *		]
 	 *	}
 	 * 2019-04-06 https://www.pwinty.com/api/2.6/#products-list
+	 * 2019-04-11
+	 * Products names are uniqie among all products:
+	 * https://github.com/inkifi/pwinty/blob/0.0.6/T/CaseT/V26/Catalogue.php#L86-L100
 	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t02()
@@ -93,7 +96,7 @@ final class Catalogue {
 	 * @param S $s
 	 * @return array(array(string => mixed))
 	 */
-	static function p(S $s) {return dfcf(function() use($s) {return
-		F::s()->get(ikf_pw_country($s), 'Pro')['items']
-	;}, [$s->getCode()]);}
+	static function p(S $s) {return dfcf(function() use($s) {return df_index(
+		'name', F::s()->get(ikf_pw_country($s), 'Pro')['items']
+	);}, [$s->getCode()]);}
 }
