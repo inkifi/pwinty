@@ -4,13 +4,12 @@ use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
 use Inkifi\Mediaclip\API\Entity\Order\Item\File as F;
 use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
-use Magento\Customer\Model\Customer;
+use Inkifi\Pwinty\API\B\Order\Create as bCreate;
+use Inkifi\Pwinty\API\Entity\Order as eOrder;
 use Magento\Sales\Model\Order as O;
-use Magento\Sales\Model\Order\Address as OA;
 use Mangoit\MediaclipHub\Model\Orders as mOrder;
 use Mangoit\MediaclipHub\Model\Product as mP;
 use pwinty\PhpPwinty as API;
-use Zend\Log\Logger as zL;
 // 2019-02-24
 final class AvailableForDownload {
 	/**
@@ -32,8 +31,6 @@ final class AvailableForDownload {
 		$images = array_merge(df_map(ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return
 			$this->pOI($mOI)
 		;}));
-		$sa = $o->getShippingAddress(); /** @var OA $sa */
-		$customer = df_customer($o); /** @var Customer $customer */
 		$api = ikf_pw_api($ev->store()); /** @var API $api */
 		/**
 		 * 2019-04-02
@@ -64,43 +61,19 @@ final class AvailableForDownload {
 		 *		"status": "NotYetSubmitted"
 		 *	}
 		 */
-		$pOrder = $api->createOrder(
-			df_cc_s($customer['firstname'], $customer['lastname'])
-			,$customer['email']
-			,df_ccc(', ', $sa->getCompany(), $sa->getStreetLine(1))
-			,$sa->getStreetLine(2)
-			,$sa->getCity()
-			,$sa->getRegion()
-			,$sa->getPostcode()
-			,'GB'
-			,$sa->getCountryId()
-			,true
-			,'InvoiceMe' //payment method
-			,'Pro' //quality
-		); /** @var array(string => mixed) $pOrder */
-		$zl = ikf_logger('pwinty_orders_status'); /** @var zL $zl */
-		$zl->info($pOrder);
-		// 2019-04-03 «775277»
-		$pwintyOrderId = (int)$pOrder['id'];  /** @var int $pwintyOrderId*/
-		$mOrder = $ev->mo(); /** @var mOrder $mOrder */
+		$eOrder = bCreate::p($o); /** @var eOrder $eOrder */
 		/** 2019-04-03 @used-by \Inkifi\Pwinty\Controller\Index\Index::execute() */
-		$mOrder[mOrder::F__PWINTY_ORDER_ID] = $pwintyOrderId;
-		$mOrder->save();
+		$ev->mo()->oidPwintySet($pwOid = $eOrder->id())->save();  /** @var int $pwOid*/ // 2019-04-03 «775277»
 		/**
 		 * 2019-04-02
 		 * 1) «Add multiple photos to an order»: https://www.pwinty.com/api/2.2/#photos-create-multiple
 		 * 2) This API endpoint is absent in the latest Pwinty API version (3.0).
 		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
 		 */
-		$photos = $api->addPhotos($pwintyOrderId, array_values($images));
-		$zl->info($photos);
-		$getOrderStatus = $api->getOrderStatus($pwintyOrderId);
-		$zl->info($getOrderStatus);
+		$api->addPhotos($pwOid, array_values($images));
+		$getOrderStatus = $api->getOrderStatus($pwOid);
 		if ($getOrderStatus['isValid'] == 1) {
-			$api->updateOrderStatus($pwintyOrderId, 'Submitted');
-		}
-		else {
-			$zl->info('order is not submitted');
+			$api->updateOrderStatus($pwOid, 'Submitted');
 		}
 	}
 

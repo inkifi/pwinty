@@ -83,6 +83,7 @@ final class Order extends \Df\API\Document {
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Get::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Submit::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Validate::p()
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::_p()
 	 * @return int
 	 */
 	function id() {return (int)$this['id'];}
