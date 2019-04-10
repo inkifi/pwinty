@@ -41,6 +41,7 @@ final class Image extends \Df\API\Document {
 	 * https://www.pwinty.com/api/2.6/#photos-get
 	 * https://www.pwinty.com/api/2.6/#photos-create
 	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @param int|null $v [optional]
 	 * @return int|$this
 	 */
@@ -62,6 +63,7 @@ final class Image extends \Df\API\Document {
 	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
 	 * 2) `Crop`, `ShrinkToFit`, `ShrinkToExactFit`
 	 * https://www.pwinty.com/api/2.6/#photos-resizing
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @param string|null $v [optional]
 	 * @return string|$this
 	 */
@@ -73,6 +75,7 @@ final class Image extends \Df\API\Document {
 	 * https://www.pwinty.com/api/2.6/#photos-get
 	 * https://www.pwinty.com/api/2.6/#photos-create
 	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @param string|null $v [optional]
 	 * @return string|$this
 	 */
@@ -84,6 +87,7 @@ final class Image extends \Df\API\Document {
 	 * https://www.pwinty.com/api/2.6/#photos-get
 	 * https://www.pwinty.com/api/2.6/#photos-create
 	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @param string|null $v [optional]
 	 * @return string|$this
 	 */

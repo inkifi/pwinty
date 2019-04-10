@@ -6,6 +6,7 @@ use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
 use Inkifi\Pwinty\API\B\Catalogue as bCatalogue;
 use Inkifi\Pwinty\API\B\Order\Create as bCreate;
+use Inkifi\Pwinty\API\Entity\Image as eImage;
 use Inkifi\Pwinty\API\Entity\Order as eOrder;
 use Magento\Sales\Model\Order as O;
 use Mangoit\MediaclipHub\Model\Product as mP;
@@ -69,7 +70,7 @@ final class AvailableForDownload {
 		 */
 		$images = array_merge(df_map(ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return
 			$this->images($mOI)
-		;}));
+		;})); /** @var eImage[] $images */
 		$api->addPhotos($pwOid, array_values($images));
 		$getOrderStatus = $api->getOrderStatus($pwOid);
 		if ($getOrderStatus['isValid'] == 1) {
@@ -84,7 +85,7 @@ final class AvailableForDownload {
 	 * because most of printing products require multiple images from customers.
 	 * @used-by _p()
 	 * @param mOI $mOI
-	 * @return array(array(string => mixed))
+	 * @return eImage[]
 	 */
     private function images(mOI $mOI) {
     	/** @var array(string => mixed) $catalogueItems */
@@ -121,13 +122,12 @@ final class AvailableForDownload {
 			$frameColour = $mP->frameColor();
 			$quantity = 0; /** @var int $quantity */
 			foreach ($files as $f) { /** @var F $f */
-				$image = [
-					'copies' => 1 + $quantity
-					,'priceToUser' => '0'
-					,'sizing' => 'ShrinkToFit'
-					,'type' => $pwintyProduct
-					,'url' => $f->url()
-				]; /** @var array(string => string) $image */
+				$image = (new eImage)
+					->copies(1 + $quantity)
+					->sizing('ShrinkToFit')
+					->type($pwintyProduct)
+					->url($f->url())
+				;  /** @var eImage $image */
 				if ($frameColour) {
 					foreach ($catalogueItems as $value) {
 						/**

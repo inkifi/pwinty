@@ -82,4 +82,20 @@ final class Catalogue extends \Inkifi\Pwinty\T\CaseT {
 		bCatalogue::p(df_order(60055)->getStore())
 		,function(array $i) {return 1 < count($i['attributes']);}
 	));}
+
+	/** @test 2019-04-11 */
+	function t04() {
+		/** @var array(array(string => mixed)) $products */
+		$products = bCatalogue::p(df_order(60055)->getStore());
+		$map = []; /** @var array(string => array(string => mixed)) $map */
+		foreach ($products as $p) { /** @var array(string => mixed) $p */
+			$n = $p['name']; /** @var string $n */
+			if (!isset($map[$n])) {
+				$map[$n] = $p;
+			}
+			else {
+				echo "A duplicated name: $n\n";
+			}
+		}
+	}
 }
