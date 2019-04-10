@@ -4,10 +4,10 @@ use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
 use Inkifi\Mediaclip\API\Entity\Order\Item\File as F;
 use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
+use Inkifi\Pwinty\API\B\Catalogue as bCatalogue;
 use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 use Inkifi\Pwinty\API\Entity\Order as eOrder;
 use Magento\Sales\Model\Order as O;
-use Mangoit\MediaclipHub\Model\Orders as mOrder;
 use Mangoit\MediaclipHub\Model\Product as mP;
 use pwinty\PhpPwinty as API;
 // 2019-02-24
@@ -84,7 +84,8 @@ final class AvailableForDownload {
 	 * @return array(array(string => mixed))
 	 */
     private function pOI(mOI $mOI) {
-    	$catalogueItems = ikf_pw_items(Ev::s()->store()); /** @var array(string => mixed) $catalogueItems */
+    	/** @var array(string => mixed) $catalogueItems */
+    	$catalogueItems = bCatalogue::p(Ev::s()->store());
     	$r = []; /** @var array(string => mixed) $r */
 		$mP = $mOI->mProduct(); /** @var mP $mP */
 		if ($mP->sendJson() && ($files = $mOI->files())) { /** @var F[] $files */
@@ -151,7 +152,7 @@ final class AvailableForDownload {
 						 *	}
 						 * 2019-04-02
 						 * 1) I have got a real item with attributes
-						 * via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t02() test case:
+						 * via the @see \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t02() test case:
 						 *	{
 						 *		"attributes": [
 						 *			{
@@ -175,7 +176,7 @@ final class AvailableForDownload {
 						 *		"sizeUnits": "inches"
 						 *	}
 						 * 1) I have got a real item with multiple attributes
-						 * via the @see \Inkifi\Pwinty\T\CaseT\V22\Catalogue::t0s() test case:
+						 * via the @see \Inkifi\Pwinty\T\CaseT\V26\Catalogue::t0s() test case:
 						 *	{
 						 *		"attributes": [
 						 *			{

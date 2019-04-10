@@ -5,10 +5,10 @@ use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 use Inkifi\Pwinty\API\Entity\Image as eImage;
 // 2019-04-08
 final class AddImages extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-08 */
+	/** @test 2019-04-08 */
 	function t00() {}
 
-	/** @test 2019-04-08 */
+	/** 2019-04-08 */
 	function t01() {echo df_json_encode(array_map(
 		function(eImage $i) {return $i->a();}
 		,bAddImages::p(bCreate::p(df_order(60055)), [

@@ -96,7 +96,7 @@ final class Create {
 			// 2019-04-04
 			// API 3.0: «Two-letter country code of the recipient». Required.
 			// API 2.6: «Two-letter country code where the order should be printed.». Required.
-			,'countryCode' => $a->getCountryId()
+			,'countryCode' => ikf_pw_country($o->getStore())
 			// 2019-04-06
 			// API 3.0: Absent.
 			// API 2.6: «Two-letter country code of the recipient». Required.
