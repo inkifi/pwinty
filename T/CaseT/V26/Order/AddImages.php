@@ -28,7 +28,7 @@ final class AddImages extends \Inkifi\Pwinty\T\CaseT {
 	));}
 
 	/**
-	 * @test 2019-04-08
+	 * 2019-04-08
 	 *	[
 	 *		{
 	 *			"attributes": {"frame_colour": "gold"},
