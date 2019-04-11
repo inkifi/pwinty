@@ -4,13 +4,16 @@ use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
 use Inkifi\Mediaclip\API\Entity\Order\Item\File as F;
 use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
+use Inkifi\Pwinty\API\B\Order\AddImages as bAddImages;
 use Inkifi\Pwinty\API\B\Order\Create as bCreate;
+use Inkifi\Pwinty\API\B\Order\Submit as bSubmit;
+use Inkifi\Pwinty\API\B\Order\Validate as bValidate;
 use Inkifi\Pwinty\API\Entity\Image as eImage;
 use Inkifi\Pwinty\API\Entity\Order as eOrder;
+use Inkifi\Pwinty\API\Entity\Order\ValidationResult as R;
 use Inkifi\Pwinty\API\Entity\Product as eProduct;
 use Magento\Sales\Model\Order as O;
 use Mangoit\MediaclipHub\Model\Product as mP;
-use pwinty\PhpPwinty as API;
 // 2019-02-24
 final class AvailableForDownload {
 	/**
@@ -29,7 +32,6 @@ final class AvailableForDownload {
 		// «Modify orders numeration for Mediaclip»
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
 		$o = $ev->o(); /** @var O $o */
-		$api = ikf_pw_api($ev->store()); /** @var API $api */
 		/**
 		 * 2019-04-02
 		 * «Create an order» https://www.pwinty.com/api/2.2/#orders-create
@@ -68,13 +70,12 @@ final class AvailableForDownload {
 		 * 2) This API endpoint is absent in the latest Pwinty API version (3.0).
 		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
 		 */
-		$images = array_merge(df_map(ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return
-			$this->images($mOI)
-		;})); /** @var eImage[] $images */
-		$api->addPhotos($pwOid, array_values($images));
-		$getOrderStatus = $api->getOrderStatus($pwOid);
-		if ($getOrderStatus['isValid'] == 1) {
-			$api->updateOrderStatus($pwOid, 'Submitted');
+		bAddImages::p($eOrder, array_merge(df_map(
+			ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return $this->images($mOI);}
+		)));
+		$r = bValidate::p($eOrder); /** @var R $r */
+		if ($r->valid()) {
+			bSubmit::p($eOrder);
 		}
 	}
 

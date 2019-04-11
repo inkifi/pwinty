@@ -7,6 +7,7 @@ use Inkifi\Pwinty\API\Facade\Order as F;
 final class Submit {
 	/**
 	 * 2019-04-08 https://www.pwinty.com/api/2.6/#orders-update-status
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::_p()
 	 * @param eOrder $o
 	 * @return D
 	 */

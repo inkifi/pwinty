@@ -8,6 +8,7 @@ use Inkifi\Pwinty\API\Facade\Order as F;
 final class Validate {
 	/**
 	 * 2019-04-05 https://www.pwinty.com/api/#orders-validate
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::_p()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Create::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t01()
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t02()

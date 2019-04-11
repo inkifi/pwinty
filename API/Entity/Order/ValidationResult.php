@@ -36,7 +36,7 @@ final class ValidationResult extends \Df\API\Document {
 
 	/**
 	 * 2019-04-06
-	 * @used-by \Inkifi\Pwinty\API\Entity\Order\ValidationResult::valid()
+	 * @used-by \Inkifi\Pwinty\AvailableForDownload::_p()
 	 * @return bool
 	 */
 	function valid() {return $this['isValid'];}
