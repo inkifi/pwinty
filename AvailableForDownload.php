@@ -92,7 +92,11 @@ final class AvailableForDownload {
     private function images(mOI $mOI) {
     	$r = []; /** @var array(string => mixed) $r */
 		$mP = $mOI->mProduct(); /** @var mP $mP */
-		if ($mP->sendJson() && ($files = $mOI->files()) && ($pwProduct = $mP->pwintyProduct($s))) {
+		if (
+			$mP->sendJson()
+			&& ($files = $mOI->files())
+			&& ($pwProduct = $mP->pwintyProduct(Ev::s()->store()))
+		) {
 			/** @var F[] $files */ /** @var eProduct|null $pwProduct */
 			/**
 			 * 2018-11-02 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
@@ -119,7 +123,7 @@ final class AvailableForDownload {
 			 *			"order": 1
 			 *		}
 			*/
-			$frameColour = $mP->frameColor();
+			$frameColour = $mP->frameColor(); /** @var string $frameColour */
 			$hasFrameColor = $pwProduct->hasFrameColor(); /** @var bool $hasFrameColor */
 			foreach ($files as $f) { /** @var F $f */
 				$image = (new eImage)
