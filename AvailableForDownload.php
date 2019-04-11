@@ -4,13 +4,11 @@ use Inkifi\Mediaclip\API\Entity\Order\Item as mOI;
 use Inkifi\Mediaclip\API\Entity\Order\Item\File as F;
 use Inkifi\Mediaclip\Event as Ev;
 use Inkifi\Mediaclip\Printer;
-use Inkifi\Pwinty\API\B\Catalogue as bCatalogue;
 use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 use Inkifi\Pwinty\API\Entity\Image as eImage;
 use Inkifi\Pwinty\API\Entity\Order as eOrder;
 use Inkifi\Pwinty\API\Entity\Product as eProduct;
 use Magento\Sales\Model\Order as O;
-use Magento\Store\Model\Store as S;
 use Mangoit\MediaclipHub\Model\Product as mP;
 use pwinty\PhpPwinty as API;
 // 2019-02-24
