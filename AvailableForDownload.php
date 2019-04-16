@@ -70,7 +70,7 @@ final class AvailableForDownload {
 		 * 2) This API endpoint is absent in the latest Pwinty API version (3.0).
 		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
 		 */
-		bAddImages::p($eOrder, array_merge(df_map(
+		bAddImages::p($eOrder, dfa_flatten(df_map(
 			ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return $this->images($mOI);}
 		)));
 		$r = bValidate::p($eOrder); /** @var R $r */
