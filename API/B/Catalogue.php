@@ -14,7 +14,7 @@ final class Catalogue {
 	 */
 	static function get($name, S $s) {return dfcf(function($name) use($s) {return
 		new eProduct(self::p($s)[$name])
-	;}, [$name], $s->getCode());}
+	;}, [$name, $s->getCode()]);}
 
 	/**
 	 * 2019-03-19
