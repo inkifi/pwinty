@@ -92,8 +92,9 @@ final class AvailableForDownload {
     	$r = []; /** @var array(string => mixed) $r */
 		$mP = $mOI->mProduct(); /** @var mP $mP */
 		if (
-			$mP->sendJson()
-			&& ($files = $mOI->files())
+			// 2019-04-17 I think we do not need it for Pwinty.
+			//$mP->sendJson() &&
+			($files = $mOI->files())
 			&& ($pwProduct = $mP->pwintyProduct(Ev::s()->store()))
 		) {
 			/** @var F[] $files */ /** @var eProduct|null $pwProduct */
