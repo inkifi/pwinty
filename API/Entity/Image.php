@@ -21,12 +21,29 @@ namespace Inkifi\Pwinty\API\Entity;
  *		"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1024px-Cat_poster_1.jpg"
  *	}
  * 2019-04-24
- * Data structure in API 3.0:
+ * Data structures in API 3.0.
+ * 1) Without attributes:
  *	{
  *		"attributes": null,
  *		"copies": 1,
  *		"errorMessage": null,
  *		"id": 988488,
+ *		"md5Hash": null,
+ *		"previewUrl": null,
+ *		"price": 0,
+ *		"priceToUser": null,
+ *		"sizing": "Crop",
+ *		"sku": "FRA-INSTA-30X30",
+ *		"status": "NotYetDownloaded",
+ *		"thumbnailUrl": null,
+ *		"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1024px-Cat_poster_1.jpg"
+ *	}
+ * 2) With an attribute:
+ * {
+ *		"attributes": {"frameColour": "white"},
+ *		"copies": 1,
+ *		"errorMessage": null,
+ *		"id": 988508,
  *		"md5Hash": null,
  *		"previewUrl": null,
  *		"price": 0,

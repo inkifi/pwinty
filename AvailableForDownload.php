@@ -133,7 +133,10 @@ final class AvailableForDownload {
 					->url($f->url())
 				;  /** @var eImage $image */
 				if ($frameColour && $hasFrameColor) {
-					$image->attributes(['frame_colour' => strtolower($frameColour)]);
+					// 2019-04-24
+					// In Pwinty API 2.6 the frame color attibute has the `frame_сolour` name.
+					// In Pwinty API 3.0 the frame color attibute has the `frameColour` name.
+					$image->attributes(['frameColour' => strtolower($frameColour)]);
 				}
 				$r[] = $image;
 			}
