@@ -73,9 +73,10 @@ final class AvailableForDownload {
 			ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return $this->images($mOI);}
 		)));
 		$r = bValidate::p($eOrder); /** @var R $r */
-		if ($r->valid()) {
-			bSubmit::p($eOrder);
+		if (!$r->valid()) {
+			df_error($r->j());
 		}
+		bSubmit::p($eOrder);
 	}
 
 	/**
@@ -129,7 +130,7 @@ final class AvailableForDownload {
 			$frameColour = $mP->frameColor(); /** @var string $frameColour */
 			foreach ($files as $f) { /** @var F $f */
 				$image = (new eImage)
-					->copies($mOI->oi()->getQtyOrdered())
+					->copies(df_oqi_qty($mOI->oi()))
 					->sizing('ShrinkToFit')
 					->sku($pwSKU)
 					->url($f->url())

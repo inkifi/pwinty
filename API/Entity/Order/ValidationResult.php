@@ -25,11 +25,28 @@ namespace Inkifi\Pwinty\API\Entity\Order;
  *		]
  *	}
  * https://www.pwinty.com/api/2.6/#photo-warnings
+ * 2019-04-24
+ * A response witn zero general errors, but with an image-specific error:
+ * {
+ *		"id": "778642",
+ *		"isValid": false,
+ *		"photos": [
+ *			{
+ *				"id": 988619,
+ *				"errors": ["ZeroCopies"],
+ *				"warnings": [
+ *					"CouldNotValidateImageSize",
+ *					"CouldNotValidateAspectRatio"
+ *				]
+ *			}
+ *		],
+ *		"generalErrors": []
+ *	}
  */
 final class ValidationResult extends \Df\API\Document {
 	/**
 	 * 2019-04-06
-	 * function@used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t03()
+	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t03()
 	 * @return string[]
 	 */
 	function errors() {return $this['generalErrors'];}
