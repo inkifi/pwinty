@@ -56,8 +56,7 @@ function ikf_pw_api($s = null) {return dfcf(function(Store $s) {
 
 /**
  * 2019-04-10
- * @used-by \Inkifi\Pwinty\API\B\Catalogue::p()
- * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
+ * 2019-04-24 Currently it is never used.
  * @param Store $s
  * @return string
  */

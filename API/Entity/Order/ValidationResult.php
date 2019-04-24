@@ -29,7 +29,7 @@ namespace Inkifi\Pwinty\API\Entity\Order;
 final class ValidationResult extends \Df\API\Document {
 	/**
 	 * 2019-04-06
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Validate::t03()
+	 * function@used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t03()
 	 * @return string[]
 	 */
 	function errors() {return $this['generalErrors'];}

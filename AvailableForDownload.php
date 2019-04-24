@@ -11,7 +11,6 @@ use Inkifi\Pwinty\API\B\Order\Validate as bValidate;
 use Inkifi\Pwinty\API\Entity\Image as eImage;
 use Inkifi\Pwinty\API\Entity\Order as eOrder;
 use Inkifi\Pwinty\API\Entity\Order\ValidationResult as R;
-use Inkifi\Pwinty\API\Entity\Product as eProduct;
 use Magento\Sales\Model\Order as O;
 use Mangoit\MediaclipHub\Model\Product as mP;
 // 2019-02-24
@@ -91,13 +90,17 @@ final class AvailableForDownload {
     private function images(mOI $mOI) {
     	$r = []; /** @var array(string => mixed) $r */
 		$mP = $mOI->mProduct(); /** @var mP $mP */
-		if (
-			// 2019-04-17 I think we do not need it for Pwinty.
-			//$mP->sendJson() &&
-			($files = $mOI->files())
-			&& ($pwProduct = $mP->pwintyProduct(Ev::s()->store()))
-		) {
-			/** @var F[] $files */ /** @var eProduct|null $pwProduct */
+		/**
+		 * 2019-04-17 I think we do not need the `$mP->sendJson()` condition for Pwinty.
+		 * 2019-04-24
+		 * «But just to confirm the SKU for the PWINTY product has to be pulled from here.
+		 * "Pwinty Product Name"
+		 * If the Pwinty SKU is added into this box
+		 * then the product should be sent to Pwinty when an order is placed.
+		 * If the Pwinty SKU is not added into this box then Magneto should not send this product to Pwinty.»
+		 * https://www.upwork.com/messages/rooms/room_759684bcafe746240e5c091d3745e787/story_1c38f1480b95d93d83fe42345cd2097c
+		 */
+		if (($files = $mOI->files()) && ($pwSKU = $mP->pwintyProductSku())) { /** @var string|null $pwSKU */
 			/**
 			 * 2018-11-02 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
 			 * «Generate JSON data for photo-books»
@@ -124,15 +127,14 @@ final class AvailableForDownload {
 			 *		}
 			*/
 			$frameColour = $mP->frameColor(); /** @var string $frameColour */
-			$hasFrameColor = $pwProduct->hasFrameColor(); /** @var bool $hasFrameColor */
 			foreach ($files as $f) { /** @var F $f */
 				$image = (new eImage)
 					->copies($mOI->oi()->getQtyOrdered())
 					->sizing('ShrinkToFit')
-					->sku($pwProduct->name())
+					->sku($pwSKU)
 					->url($f->url())
 				;  /** @var eImage $image */
-				if ($frameColour && $hasFrameColor) {
+				if ($frameColour) {
 					// 2019-04-24
 					// In Pwinty API 2.6 the frame color attibute has the `frame_сolour` name.
 					// In Pwinty API 3.0 the frame color attibute has the `frameColour` name.

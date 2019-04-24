@@ -24,9 +24,9 @@ final class AddImage {
 	 *		"type": "MiniFrame_16x16_LustrePaper_gb",
 	 *		"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1024px-Cat_poster_1.jpg"
 	 *	}
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImage::t01()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImage::t02()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\Get::t01()
+	 * function@used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage::t01()
+	 * function@used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage::t02()
+	 * function@used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Get::t01()
 	 * @param eOrder $o
 	 * @param array(string => mixed)$d
 	 * @return R

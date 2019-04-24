@@ -79,7 +79,7 @@ final class AddImages {
 	 *		}
 	 *	]
 	 * @used-by \Inkifi\Pwinty\AvailableForDownload::_p()
-	 * @used-by \Inkifi\Pwinty\T\CaseT\V26\Order\AddImages::t01()
+	 * function@used-by \Inkifi\Pwinty\T\CaseT\V30\Order\AddImages::t01()
 	 * @param eOrder $o
 	 * @param eImage[] $images
 	 * @return eImage[]
