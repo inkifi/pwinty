@@ -7,7 +7,7 @@ use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Address as OA;
 // 2019-04-24
 final class Create extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-24 */
+	/** @test 2019-04-24 */
 	function t00() {}
 
 	/**
@@ -159,6 +159,6 @@ final class Create extends \Inkifi\Pwinty\T\CaseT {
 	}
 
 
-	/** @test 2019-04-24 */
+	/** 2019-04-24 */
 	function t03() {echo df_json_encode(bCreate::p(df_order(60055))->a());}
 }

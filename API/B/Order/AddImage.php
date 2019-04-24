@@ -32,6 +32,6 @@ final class AddImage {
 	 * @return R
 	 */
 	static function p(eOrder $o, array $d) {return F::s($o->magentoOrder())->post(
-		$d, "{$o->id()}/Photos", FO::i()->resC(R::class)
+		$d, "{$o->id()}/images", FO::i()->resC(R::class)
 	)->res();}
 }
