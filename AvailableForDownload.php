@@ -129,7 +129,7 @@ final class AvailableForDownload {
 				$image = (new eImage)
 					->copies($mOI->oi()->getQtyOrdered())
 					->sizing('ShrinkToFit')
-					->type($pwProduct->name())
+					->sku($pwProduct->name())
 					->url($f->url())
 				;  /** @var eImage $image */
 				if ($frameColour && $hasFrameColor) {

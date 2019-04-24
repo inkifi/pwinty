@@ -10,6 +10,8 @@ namespace Inkifi\Pwinty\T;
  * @see \Inkifi\Pwinty\T\CaseT\V26\Order\Get
  * @see \Inkifi\Pwinty\T\CaseT\V26\Order\Submit
  * @see \Inkifi\Pwinty\T\CaseT\V26\Order\Validate
+ * @see \Inkifi\Pwinty\T\CaseT\V30\Order\AddImage
+ * @see \Inkifi\Pwinty\T\CaseT\V30\Order\AddImages
  * @see \Inkifi\Pwinty\T\CaseT\V30\Order\Create
  */
 abstract class CaseT extends \Df\Core\TestCase {}

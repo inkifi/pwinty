@@ -4,7 +4,7 @@ namespace Inkifi\Pwinty\API\Entity;
  * 2019-04-07
  * https://www.pwinty.com/api/#images-object
  * https://www.pwinty.com/api/2.6/#photos-get
- * Data structure:
+ * Data structure in API 2.6:
  *	{
  *		"attributes": [],
  *		"copies": 1,
@@ -18,6 +18,23 @@ namespace Inkifi\Pwinty\API\Entity;
  *		"status": "NotYetDownloaded",
  *		"thumbnailUrl": null,
  *		"type": "MiniFrame_16x16_LustrePaper_gb",
+ *		"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1024px-Cat_poster_1.jpg"
+ *	}
+ * 2019-04-24
+ * Data structure in API 3.0:
+ *	{
+ *		"attributes": null,
+ *		"copies": 1,
+ *		"errorMessage": null,
+ *		"id": 988488,
+ *		"md5Hash": null,
+ *		"previewUrl": null,
+ *		"price": 0,
+ *		"priceToUser": null,
+ *		"sizing": "Crop",
+ *		"sku": "FRA-INSTA-30X30",
+ *		"status": "NotYetDownloaded",
+ *		"thumbnailUrl": null,
  *		"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1024px-Cat_poster_1.jpg"
  *	}
  */
@@ -72,15 +89,18 @@ final class Image extends \Df\API\Document {
 
 	/**
 	 * 2019-04-10
-	 * «Type of photo».
+	 * API 2.6. «Type of photo».
 	 * https://www.pwinty.com/api/2.6/#photos-get
 	 * https://www.pwinty.com/api/2.6/#photos-create
 	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
+	 * 2019-04-24
+	 * API 3.0 «An identification code of the product associated with this image».
+	 * https://www.pwinty.com/api/#images-object
 	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
 	 * @param string|null $v [optional]
 	 * @return string|$this
 	 */
-	function type($v = null) {return df_prop($this, $v);}
+	function sku($v = null) {return df_prop($this, $v);}
 
 	/**
 	 * 2019-04-10

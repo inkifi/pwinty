@@ -4,7 +4,7 @@ use Inkifi\Pwinty\API\B\Order\AddImage as bAddImage;
 use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 // 2019-04-24
 final class AddImage extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-24 */
+	/** @test 2019-04-24 */
 	function t00() {}
 
 	/** 2019-04-24 «SKU not in catalogue» */
@@ -56,7 +56,7 @@ final class AddImage extends \Inkifi\Pwinty\T\CaseT {
 		,'url' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1024px-Cat_poster_1.jpg'
 	])->id());}
 
-	/** @test 2019-04-24
+	/** 2019-04-24
 	 * A response:
 	 *	{
 	 *		"attributes": null,
