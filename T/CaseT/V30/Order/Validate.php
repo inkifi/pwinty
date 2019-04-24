@@ -6,7 +6,7 @@ use Inkifi\Pwinty\API\B\Order\Validate as bValidate;
 use Inkifi\Pwinty\API\Entity\Order as eO;
 // 2019-04-24
 final class Validate extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-24 */
+	/** @test 2019-04-24 */
 	function t00() {}
 
 	/**
@@ -28,7 +28,6 @@ final class Validate extends \Inkifi\Pwinty\T\CaseT {
 	function t03() {echo df_json_encode(bValidate::p(bCreate::p(df_order(60055)))->errors());}
 
 	/**
-	 * @test
 	 * 2019-04-07
 	 * A response from API 2.6:
 	 *	{
