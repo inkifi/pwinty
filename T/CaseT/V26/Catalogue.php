@@ -3,7 +3,7 @@ namespace Inkifi\Pwinty\T\CaseT\V26;
 use Inkifi\Pwinty\API\B\Catalogue as bCatalogue;
 // 2019-04-06
 final class Catalogue extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-06 */
+	/** @test 2019-04-06 */
 	function t00() {}
 
 	/** 2019-04-06 https://www.pwinty.com/api/2.6/#products-list */
