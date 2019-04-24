@@ -10,9 +10,7 @@ final class Create extends \Inkifi\Pwinty\T\CaseT {
 	/** @test 2019-04-04 */
 	function t00() {}
 
-	/**
-	 * 2019-04-04
-	 */
+	/** 2019-04-04 */
 	function t01() {echo df_json_encode(bCreate::p(df_order(60055))->a());}
 
 	/**

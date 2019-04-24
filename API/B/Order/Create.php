@@ -96,11 +96,7 @@ final class Create {
 			// 2019-04-04
 			// API 3.0: «Two-letter country code of the recipient». Required.
 			// API 2.6: «Two-letter country code where the order should be printed.». Required.
-			,'countryCode' => ikf_pw_country($o->getStore())
-			// 2019-04-06
-			// API 3.0: Absent.
-			// API 2.6: «Two-letter country code of the recipient». Required.
-			,'destinationCountryCode' => $a->getCountryId()
+			,'countryCode' => $a->getCountryId()
 			// 2019-04-04 «Customer's email address». Optional.
 			,'email' => $c->getEmail()
 			// 2019-04-04
@@ -137,19 +133,11 @@ final class Create {
 			 * API 2.6:
 			 * «Standard values are CHEAPEST or PRIORITY, contact us for more details». Optional.
 			 */
-			,'preferredShippingMethod' => 'PRIORITY'
-			// 2019-04-06
-			// API 3.0: Absent.
-			// API 2.6: «Quality Level for order, either `Pro` or `Standard`». Required.
-			,'qualityLevel' => 'Pro'
+			,'preferredShippingMethod' => 'Standard'
 			// 2019-04-04 «Recipient name». Required.
 			,'recipientName' => $c->getName()
 			// 2019-04-04 «State, county or region of the recipient». Required.
 			,'stateOrCounty' => $a->getRegion()
-			// 2019-04-06
-			// API 3.0: Absent.
-			// API 2.6: «Whether to upgrade to a tracked shipping service when available». Optional.
-			,'useTrackedShipping' => true
 		], null, FO::i()->resC(R::class))->res(); /** @var R $r */
 		$r->magentoOrder($o);
 		return $r;

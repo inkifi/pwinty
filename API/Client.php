@@ -5,11 +5,12 @@ use Inkifi\Pwinty\Settings as S;
 final class Client extends \Df\API\Client {
 	/**
 	 * 2019-04-06
+	 * @used-by urlBase()
 	 * @used-by \Inkifi\Pwinty\API\Facade\Catalogue::adjustClient()
 	 * @param string|null $v [optional]
 	 * @return $this|string
 	 */
-	function version($v = null) {return df_prop($this, $v, '2.6');}
+	function version($v = null) {return df_prop($this, $v, '3.0');}
 
 	/**
 	 * 2019-04-04 https://www.pwinty.com/api#format
