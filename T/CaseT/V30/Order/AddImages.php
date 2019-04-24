@@ -5,7 +5,7 @@ use Inkifi\Pwinty\API\B\Order\Create as bCreate;
 use Inkifi\Pwinty\API\Entity\Image as eImage;
 // 2019-04-24
 final class AddImages extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-24 */
+	/** @test 2019-04-24 */
 	function t00() {}
 
 	/** 2019-04-24 */
@@ -40,7 +40,8 @@ final class AddImages extends \Inkifi\Pwinty\T\CaseT {
 		])
 	));}
 
-	/** 2019-04-24
+	/**
+	 * 2019-04-24
 	 * «Value of 'gold' supplied for attribute 'frameColour' isn't in the list of supported values.
 	 * Valid values are: [white,black]»
 	 */
