@@ -6,11 +6,11 @@ use Inkifi\Pwinty\API\B\Order\Get as bGet;
 use Inkifi\Pwinty\API\Entity\Order as eO;
 // 2019-04-24
 final class Get extends \Inkifi\Pwinty\T\CaseT {
-	/** 2019-04-24 */
+	/** @test 2019-04-24 */
 	function t00() {}
 
 	/**
-	 * @test 2019-04-24
+	 * 2019-04-24
 	 *	{
 	 *		"address1": "47 Wolverhampton Road",
 	 *		"address2": "",

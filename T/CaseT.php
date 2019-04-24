@@ -14,5 +14,6 @@ namespace Inkifi\Pwinty\T;
  * @see \Inkifi\Pwinty\T\CaseT\V30\Order\AddImages
  * @see \Inkifi\Pwinty\T\CaseT\V30\Order\Create
  * @see \Inkifi\Pwinty\T\CaseT\V30\Order\Get
+ * @see \Inkifi\Pwinty\T\CaseT\V30\Order\Validate
  */
 abstract class CaseT extends \Df\Core\TestCase {}
