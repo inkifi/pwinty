@@ -131,12 +131,8 @@ final class Create {
 			 * 2019-04-06
 			 * API 2.6: «Standard values are CHEAPEST or PRIORITY, contact us for more details». Optional.
 			 * 2019-05-01
-			 * 1) «Implement the preferredShippingMethod backend input in Magento 2
-			 * and pass its value to Pwinty»: https://www.upwork.com/ab/f/contracts/22078819
-			 * 2) «You will see that in the Magento Panel we already have
-			 * https://prnt.sc/mms11j - 'frameColour'
-			 * We will need another input box for 'preferredShippingMethod».
-			 * https://www.upwork.com/messages/rooms/room_759684bcafe746240e5c091d3745e787/story_e160ac121eaec2ee2b4d0fb74c4293f2
+			 * «Implement the `preferredShippingMethod` backend input and pass its value to Pwinty»:
+			 * https://github.com/inkifi/pwinty/issues/1
 			 */
 			,'preferredShippingMethod' => 'Standard'
 			/**
