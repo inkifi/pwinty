@@ -88,7 +88,7 @@ final class Create {
 		$a = $o->getShippingAddress(); /** @var OA $a */
 		$r = F::s($o)->post([
 			// 2019-04-04 «First line of recipient address». Required.
-			'address1' => $a->getStreetLine(1)
+			'address1' => df_cc_s($a->getCompany(), $a->getStreetLine(1))
 			// 2019-04-04 «Second line of recipient address». Optional.
 			,'address2' => $a->getStreetLine(2)
 			// 2019-04-04 «Town or city of the recipient». Required.
@@ -127,11 +127,16 @@ final class Create {
 			,'postalOrZipCode' => $a->getPostcode()
 			/**
 			 * 2019-04-04
-			 * API 3.0:
-			 * «Possible values are `Budget`, `Standard`, `Express`, and `Overnight`». Required.
+			 * API 3.0: «Possible values are `Budget`, `Standard`, `Express`, and `Overnight`». Required.
 			 * 2019-04-06
-			 * API 2.6:
-			 * «Standard values are CHEAPEST or PRIORITY, contact us for more details». Optional.
+			 * API 2.6: «Standard values are CHEAPEST or PRIORITY, contact us for more details». Optional.
+			 * 2019-05-01
+			 * 1) «Implement the preferredShippingMethod backend input in Magento 2
+			 * and pass its value to Pwinty»: https://www.upwork.com/ab/f/contracts/22078819
+			 * 2) «You will see that in the Magento Panel we already have
+			 * https://prnt.sc/mms11j - 'frameColour'
+			 * We will need another input box for 'preferredShippingMethod».
+			 * https://www.upwork.com/messages/rooms/room_759684bcafe746240e5c091d3745e787/story_e160ac121eaec2ee2b4d0fb74c4293f2
 			 */
 			,'preferredShippingMethod' => 'Standard'
 			/**
