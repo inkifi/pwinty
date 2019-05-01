@@ -134,8 +134,14 @@ final class Create {
 			 * «Standard values are CHEAPEST or PRIORITY, contact us for more details». Optional.
 			 */
 			,'preferredShippingMethod' => 'Standard'
-			// 2019-04-04 «Recipient name». Required.
-			,'recipientName' => $c->getName()
+			/**
+			 * 2019-04-04 «Recipient name». Required.
+			 * 2019-05-01
+			 * We need to use the name from the customer's shipping address:
+			 * https://www.upwork.com/messages/rooms/room_84b17b85dbea0cd4bc3286cc3b10335e/story_9aa11351174d6da2c227cb4ce37985e1
+			 * The previous code was: `$c->getName()`.
+			 */
+			,'recipientName' => $a->getName()
 			// 2019-04-04 «State, county or region of the recipient». Required.
 			,'stateOrCounty' => $a->getRegion()
 		], null, FO::i()->resC(R::class))->res(); /** @var R $r */
