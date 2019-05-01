@@ -81,9 +81,10 @@ final class Create {
 	 *	}
 	 * @used-by \Inkifi\Pwinty\AvailableForDownload::_p()
 	 * @param O $o
+	 * @param string|null $shippingMethod [optional]
 	 * @return R
 	 */
-	static function p(O $o) {
+	static function p(O $o, $shippingMethod = null) {
 		$c = df_customer($o); /** @var Customer $c */
 		$a = $o->getShippingAddress(); /** @var OA $a */
 		$r = F::s($o)->post([
@@ -134,7 +135,7 @@ final class Create {
 			 * «Implement the `preferredShippingMethod` backend input and pass its value to Pwinty»:
 			 * https://github.com/inkifi/pwinty/issues/1
 			 */
-			,'preferredShippingMethod' => 'Standard'
+			,'preferredShippingMethod' => $shippingMethod ?: 'Standard'
 			/**
 			 * 2019-04-04 «Recipient name». Required.
 			 * 2019-05-01

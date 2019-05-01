@@ -31,6 +31,14 @@ final class AvailableForDownload {
 		// «Modify orders numeration for Mediaclip»
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
 		$o = $ev->o(); /** @var O $o */
+		$mOIs = ikf_api_oi($o->getId(), Printer::PWINTY); /** @var mOI[] $mOIs */
+		/** @var array(string => int) $smWeights */
+		$smWeights = array_flip(['Budget', 'Standard', 'Express', 'Overnight']);
+		/**
+		 * @param string $v
+		 * @return int
+		 */
+		$smWeight = function($v) use($smWeights) {return dftr($v, $smWeights);};
 		/**
 		 * 2019-04-02
 		 * «Create an order» https://www.pwinty.com/api/2.2/#orders-create
@@ -60,7 +68,12 @@ final class AvailableForDownload {
 		 *		"status": "NotYetSubmitted"
 		 *	}
 		 */
-		$eOrder = bCreate::p($o); /** @var eOrder $eOrder */
+		$eOrder = bCreate::p($o, df_first(df_sort(
+			array_unique(array_map(function(mOI $mOI) {return
+				$mOI->mProduct()->pwintyShippingMethod()
+			;}, $mOIs))
+			,function($a, $b) use($smWeight) {return $smWeight($b) - $smWeight($a);}
+		))); /** @var eOrder $eOrder */
 		/** 2019-04-03 @used-by \Inkifi\Pwinty\Controller\Index\Index::execute() */
 		$ev->mo()->oidPwintySet($pwOid = $eOrder->id())->save();  /** @var int $pwOid*/ // 2019-04-03 «775277»
 		/**
@@ -69,9 +82,7 @@ final class AvailableForDownload {
 		 * 2) This API endpoint is absent in the latest Pwinty API version (3.0).
 		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
 		 */
-		bAddImages::p($eOrder, dfa_flatten(df_map(
-			ikf_api_oi($o->getId(), Printer::PWINTY), function(mOI $mOI) {return $this->images($mOI);}
-		)));
+		bAddImages::p($eOrder, dfa_flatten(df_map($mOIs, function(mOI $mOI) {return $this->images($mOI);})));
 		$r = bValidate::p($eOrder); /** @var R $r */
 		if (!$r->valid()) {
 			df_error($r->j());
