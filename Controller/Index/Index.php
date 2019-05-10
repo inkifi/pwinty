@@ -4,7 +4,6 @@ use Df\Framework\W\Result\Text;
 use Df\Sales\Model\Order as DFO;
 use Inkifi\Pwinty\API\Entity\Shipment as pwShipment;
 use Inkifi\Pwinty\Event;
-use Magento\Framework\Exception\LocalizedException as LE;
 use Magento\Sales\Model\Convert\Order as Converter;
 use Magento\Sales\Model\Order as O;
 use Magento\Sales\Model\Order\Item as OI;
@@ -14,7 +13,7 @@ use Magento\Sales\Model\Order\Shipment\Track;
 use Magento\Shipping\Model\ShipmentNotifier;
 use Mangoit\MediaclipHub\Model\Orders as mOrder;
 /**
- * 2019-04-04 https://www.pwinty.com/api/#callbacks
+ * 2019-04-04 https://www.pwinty.com/api#callbacks
  * «Pwinty can make callbacks to a custom URL whenever the status of one of your orders changes.
  * Setup your callback URL under the Integrations section of the Dashboard.
  * Pwinty will make an JSON formatted HTTP POST to your chosen URL with the following parameters.»
@@ -31,35 +30,36 @@ class Index extends \Df\Framework\Action {
 	 * @return Text
 	 */
 	function execute() {
-		$e = Event::s(); /** @var Event $e */
-		foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
-			/**
-			 * 2019-04-03
-			 * The `pwinty_order_id` field is initialized by
-			 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
-			 */
-			$mOrder = mOrder::byPwintyOrderId($e->orderId()); /** @var $mOrder $mOrder */
-			$o = $mOrder->o(); /** @var O|DFO $o */
-			df_assert($o->canShip());
-			// 2019-04-03
-			// Currently, these values are only set to the database,
-			// but they are never retrieved from there.
-			$mOrder->trackingNumberSet($sh->trackingNumber());
-			$mOrder->trackingUrlSet($sh->trackingUrl());
-			$mOrder->save();
-			$converter = df_new_om(Converter::class); /** @var Converter $converter */
-			$shipment = $converter->toShipment($o); /** @var Shipment $shipment */
-			foreach ($o->getAllItems() as $oi) { /** @var OI $oi */
-				if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
-					$qtyShipped = $oi->getQtyToShip();
-					$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
-					$si->setQty($qtyShipped);
-					$shipment->addItem($si);
+		/** @var Text $r */
+		try {
+			$e = Event::s(); /** @var Event $e */
+			foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
+				/**
+				 * 2019-04-03
+				 * The `pwinty_order_id` field is initialized by
+				 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
+				 */
+				$mOrder = mOrder::byPwintyOrderId($e->orderId()); /** @var $mOrder $mOrder */
+				$o = $mOrder->o(); /** @var O|DFO $o */
+				df_assert($o->canShip());
+				// 2019-04-03
+				// Currently, these values are only set to the database,
+				// but they are never retrieved from there.
+				$mOrder->trackingNumberSet($sh->trackingNumber());
+				$mOrder->trackingUrlSet($sh->trackingUrl());
+				$mOrder->save();
+				$converter = df_new_om(Converter::class); /** @var Converter $converter */
+				$shipment = $converter->toShipment($o); /** @var Shipment $shipment */
+				foreach ($o->getAllItems() as $oi) { /** @var OI $oi */
+					if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
+						$qtyShipped = $oi->getQtyToShip();
+						$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
+						$si->setQty($qtyShipped);
+						$shipment->addItem($si);
+					}
 				}
-			}
-			$shipment->register();
-			$o->setIsInProcess(true);
-			try {
+				$shipment->register();
+				$o->setIsInProcess(true);
 				$track = df_new_om(Track::class); /** @var Track $track */
 				$track->setCarrierCode('Pwinty');
 				$track->setDescription("Pwinty");
@@ -71,10 +71,25 @@ class Index extends \Df\Framework\Action {
 				$shipment->getOrder()->save();
 				df_new_om(ShipmentNotifier::class)->notify($shipment);
 				$shipment->save();
-			} catch (\Exception $e) {
-				throw new LE(__($e->getMessage()));
+			}
+			/**
+			 * 2019-05-09
+			 * «Pwinty will continue to try and make the callback
+			 * until it receives an OK (200) Status code response from your server,
+			 * or until the callback has failed 15 times.
+			 * The time between each callback retry attempt will increase each time there is a failure.»
+			 * https://www.pwinty.com/api#callbacks
+			 */
+			$r = Text::i('OK');
+		}
+		catch (\Exception $e) {
+			df_response_code(500);
+			$r = Text::i(df_ets($e));
+			df_log($e);
+			if (df_my_local()) {
+				throw $e; // 2016-03-27 It is convenient for me to the the exception on the screen.
 			}
 		}
-		return Text::i('OK');
+		return $r;
 	}
 }

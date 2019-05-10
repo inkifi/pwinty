@@ -1,10 +1,10 @@
 <?php
 namespace Inkifi\Pwinty;
 use Inkifi\Pwinty\API\Entity\Shipment;
-// 2019-04-04 https://www.pwinty.com/api/#callbacks
+// 2019-04-04 https://www.pwinty.com/api#callbacks
 final class Event extends \Df\API\Document {
 	/**
-	 * 2019-04-04 «971961»
+	 * 2019-04-04 «The Pwinty ID of the order». «971961»
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return int
 	 */
