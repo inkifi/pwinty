@@ -33,14 +33,15 @@ class Index extends \Df\Framework\Action {
 		/** @var Text $r */
 		try {
 			$e = Event::s(); /** @var Event $e */
-			df_log($e->j(), $this);
+			df_log_l($this, $e->a(), "{$e->oid()}-{$e->status()}");
+			df_sentry($this, "{$e->oid()}: {$e->status()}", ['extra' => $e->a()]);
 			foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
 				/**
 				 * 2019-04-03
 				 * The `pwinty_order_id` field is initialized by
 				 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
 				 */
-				$mOrder = mOrder::byPwintyOrderId($e->orderId()); /** @var $mOrder $mOrder */
+				$mOrder = mOrder::byPwintyOrderId($e->oidE()); /** @var $mOrder $mOrder */
 				$o = $mOrder->o(); /** @var O|DFO $o */
 				df_assert($o->canShip());
 				// 2019-04-03

@@ -4,11 +4,21 @@ use Inkifi\Pwinty\API\Entity\Shipment;
 // 2019-04-04 https://www.pwinty.com/api#callbacks
 final class Event extends \Df\API\Document {
 	/**
-	 * 2019-04-04 «The Pwinty ID of the order». «971961»
+	 * 2019-05-10
+	 * This key is undecomented. We pass its value in @see \Inkifi\Pwinty\API\B\Order\Create::p()
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return int
 	 */
-	function orderId() {return (int)$this['orderId'];}
+	function oid() {return (int)$this['merchantOrderId'];}
+
+	/**
+	 * 2019-04-04 «The Pwinty ID of the order». «2088955»
+	 * 2019-05-10
+	 * Despite the Pwinty API documentation tells that the key is `orderId`, actually it is `id`
+	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
+	 * @return int
+	 */
+	function oidE() {return (int)$this['id'];}
 
 	/**
 	 * 2019-04-04
@@ -21,9 +31,8 @@ final class Event extends \Df\API\Document {
 
 	/**
 	 * 2019-04-04
-	 * «The current status of the order.
-	 * One of `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.»
-	 * Currently, it is never used.
+	 * «The current status of the order. One of `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.»
+	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return string
 	 */
 	function status() {return $this['status'];}
