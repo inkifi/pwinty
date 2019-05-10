@@ -33,6 +33,7 @@ class Index extends \Df\Framework\Action {
 		/** @var Text $r */
 		try {
 			$e = Event::s(); /** @var Event $e */
+			df_log($e->j(), $this);
 			foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
 				/**
 				 * 2019-04-03
