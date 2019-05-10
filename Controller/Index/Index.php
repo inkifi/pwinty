@@ -85,7 +85,7 @@ class Index extends \Df\Framework\Action {
 		catch (\Exception $e) {
 			df_response_code(500);
 			$r = Text::i(df_ets($e));
-			df_log($e);
+			df_log($e, $this);
 			if (df_my_local()) {
 				throw $e; // 2016-03-27 It is convenient for me to the the exception on the screen.
 			}
