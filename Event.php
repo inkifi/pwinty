@@ -51,10 +51,18 @@ final class Event extends \Df\API\Document {
 	 * 2019-04-04
 	 * «The current status of the order. One of `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.»
 	 * 2019-05-13 "status": "Submitted"
+	 * @used-by status_Submitted()
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return string
 	 */
 	function status() {return $this['status'];}
+
+	/**
+	 * 2019-05-13
+	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
+	 * @return bool
+	 */
+	function status_Submitted() {return 'Submitted' === $this->status();}
 
 	/**
 	 * 2019-04-04

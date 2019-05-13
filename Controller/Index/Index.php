@@ -35,44 +35,56 @@ class Index extends \Df\Framework\Action {
 			$e = Event::s(); /** @var Event $e */
 			df_log_l($this, $e->a(), "{$e->oid()}-{$e->status()}");
 			df_sentry($this, "{$e->oid()}: {$e->status()}", ['extra' => $e->a()]);
-			foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
-				/**
-				 * 2019-04-03
-				 * The `pwinty_order_id` field is initialized by
-				 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
-				 */
-				$mOrder = mOrder::byPwintyOrderId($e->oidE()); /** @var $mOrder $mOrder */
-				$o = $mOrder->o(); /** @var O|DFO $o */
-				df_assert($o->canShip());
-				// 2019-04-03
-				// Currently, these values are only set to the database,
-				// but they are never retrieved from there.
-				$mOrder->trackingNumberSet($sh->trackingNumber());
-				$mOrder->trackingUrlSet($sh->trackingUrl());
-				$mOrder->save();
-				$converter = df_new_om(Converter::class); /** @var Converter $converter */
-				$shipment = $converter->toShipment($o); /** @var Shipment $shipment */
-				foreach ($o->getAllItems() as $oi) { /** @var OI $oi */
-					if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
-						$qtyShipped = $oi->getQtyToShip();
-						$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
-						$si->setQty($qtyShipped);
-						$shipment->addItem($si);
+			/**
+			 * 2019-05-13
+			 * Possible statuses: `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.
+			 * We create shipment documents only on the `Submitted` event.
+			 * Pwinty will later send us the `Complete` event for the same items,
+			 * and we should not create shipment documents again.
+			 */
+			if ($e->status_Submitted()) {
+				foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
+					/**
+					 * 2019-04-03
+					 * The `pwinty_order_id` field is initialized by
+					 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
+					 */
+					$mOrder = mOrder::byPwintyOrderId($e->oidE()); /** @var $mOrder $mOrder */
+					$o = $mOrder->o(); /** @var O|DFO $o */
+					df_assert($o->canShip());
+					// 2019-04-03
+					// Currently, these values are only set to the database,
+					// but they are never retrieved from there.
+					$mOrder->trackingNumberSet($sh->trackingNumber());
+					$mOrder->trackingUrlSet($sh->trackingUrl());
+					$mOrder->save();
+					$converter = df_new_om(Converter::class); /** @var Converter $converter */
+					$shipment = $converter->toShipment($o); /** @var Shipment $shipment */
+					foreach ($o->getAllItems() as $oi) { /** @var OI $oi */
+						if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
+							$qtyShipped = $oi->getQtyToShip();
+							$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
+							$si->setQty($qtyShipped);
+							$shipment->addItem($si);
+						}
 					}
+					$shipment->register();
+					$o->setIsInProcess(true);
+					$track = df_new_om(Track::class); /** @var Track $track */
+					$track->setCarrierCode('Pwinty');
+					$track->setDescription('Pwinty');
+					$track->setNumber($sh->trackingNumber());
+					$track->setTitle('Pwinty');
+					$track->setUrl($sh->trackingUrl());
+					$shipment->addTrack($track);
+					$shipment->save();
+					$shipment->getOrder()->save();
+					df_new_om(ShipmentNotifier::class)->notify($shipment);
+					$shipment->save();
+					df_sentry($this, "{$e->oid()}: a shipment is created", ['extra' => [
+						'event' => $e->a(), 'shipment' => $shipment->getIncrementId()
+					]]);
 				}
-				$shipment->register();
-				$o->setIsInProcess(true);
-				$track = df_new_om(Track::class); /** @var Track $track */
-				$track->setCarrierCode('Pwinty');
-				$track->setDescription('Pwinty');
-				$track->setNumber($sh->trackingNumber());
-				$track->setTitle('Pwinty');
-				$track->setUrl($sh['trackingUrl']);
-				$shipment->addTrack($track);
-				$shipment->save();
-				$shipment->getOrder()->save();
-				df_new_om(ShipmentNotifier::class)->notify($shipment);
-				$shipment->save();
 			}
 			/**
 			 * 2019-05-09
