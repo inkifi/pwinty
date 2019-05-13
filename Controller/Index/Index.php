@@ -64,7 +64,7 @@ class Index extends \Df\Framework\Action {
 				$o->setIsInProcess(true);
 				$track = df_new_om(Track::class); /** @var Track $track */
 				$track->setCarrierCode('Pwinty');
-				$track->setDescription("Pwinty");
+				$track->setDescription('Pwinty');
 				$track->setNumber($sh->trackingNumber());
 				$track->setTitle('Pwinty');
 				$track->setUrl($sh['trackingUrl']);

@@ -1,7 +1,25 @@
 <?php
 namespace Inkifi\Pwinty;
 use Inkifi\Pwinty\API\Entity\Shipment;
-// 2019-04-04 https://www.pwinty.com/api#callbacks
+/**
+ * 2019-04-04 https://www.pwinty.com/api#callbacks
+ * 2019-05-13
+ * 	{
+ *		"environment": "live",
+ *		"id": 2091271,
+ *		"merchantOrderId": "65785",
+ *		"shipments": [
+ *			{
+ *				"items": [11629476],
+ *				"status": "shipped",
+ *				"trackingNumber": "VB153813327GB",
+ *				"trackingUrl": "http://www.royalmail.com/portal/rm/track?trackNumber=VB153813327GB"
+ *			}
+ *		],
+ *		"status": "Submitted",
+ *		"timestamp": "2019-05-13T12:21:47.9708616Z"
+ *	}
+ */
 final class Event extends \Df\API\Document {
 	/**
 	 * 2019-05-10
@@ -32,6 +50,7 @@ final class Event extends \Df\API\Document {
 	/**
 	 * 2019-04-04
 	 * «The current status of the order. One of `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.»
+	 * 2019-05-13 "status": "Submitted"
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return string
 	 */
@@ -44,6 +63,15 @@ final class Event extends \Df\API\Document {
 	 * and it may change.
 	 * You will receive a callback each time a new shipment is created,
 	 * or a shipment status changes.»
+	 * 2019-05-13
+	 *	[
+ 	 *		{
+ 	 *			"items": [11629476],
+ 	 *			"status": "shipped",
+ 	 *			"trackingNumber": "VB153813327GB",
+ 	 *			"trackingUrl": "http://www.royalmail.com/portal/rm/track?trackNumber=VB153813327GB"
+ 	 *		}
+ 	 *	]
 	 * @used-by shipmentsShipped()
 	 * @return Shipment[]
 	 */
