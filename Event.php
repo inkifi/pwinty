@@ -24,10 +24,17 @@ final class Event extends \Df\API\Document {
 	/**
 	 * 2019-05-10
 	 * This key is undecomented. We pass its value in @see \Inkifi\Pwinty\API\B\Order\Create::p()
+	 * 2019-05-14
+	 * 1) The result will be `0` if the order was added to Pwinty not via Magento (e.g., manually).
+	 * 2) An example of such order:
+	 * https://beta-dashboard.pwinty.com/orders/2086054/detail
+	 * The Magento's Customer: Ortal Mendelawe
+	 * https://inkifi.com/canvaspr_admin/customer/index/edit/id/79904
+	 * The customer does not have assotiated orders in Magento.
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return int
 	 */
-	function oid() {return (int)$this['merchantOrderId'];}
+	function orderId_Magento() {return (int)$this['merchantOrderId'];}
 
 	/**
 	 * 2019-04-04 «The Pwinty ID of the order». «2088955»
@@ -36,7 +43,7 @@ final class Event extends \Df\API\Document {
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return int
 	 */
-	function oidE() {return (int)$this['id'];}
+	function orderId_Pwinty() {return (int)$this['id'];}
 
 	/**
 	 * 2019-04-04

@@ -33,8 +33,11 @@ class Index extends \Df\Framework\Action {
 		/** @var Text $r */
 		try {
 			$e = Event::s(); /** @var Event $e */
-			df_log_l($this, $e->a(), "{$e->oid()}-{$e->status()}");
-			df_sentry($this, "{$e->oid()}: {$e->status()}", ['extra' => $e->a()]);
+			$orderId_Magento = $e->orderId_Magento(); /** @var int $orderId_Magento */
+			$orderId_Pwinty = $e->orderId_Pwinty(); /** @var int $orderId_Pwinty */
+			$orderId_Log = $orderId_Magento ?: "PW-$orderId_Pwinty";  /** @var int|string  $orderId_Log */
+			df_log_l($this, $e->a(), "$orderId_Log-{$e->status()}");
+			df_sentry($this, "$orderId_Log: {$e->status()}", ['extra' => $e->a()]);
 			df_sentry_extra($this, 'Pwinty Event', $e->a());
 			/**
 			 * 2019-05-13
@@ -42,15 +45,20 @@ class Index extends \Df\Framework\Action {
 			 * We create shipment documents only on the `Submitted` event.
 			 * Pwinty will later send us the `Complete` event for the same items,
 			 * and we should not create shipment documents again.
+			 *
+			 * 2019-05-14
+			 * 1) $orderId_Magento is `0` if the order was added to Pwinty not via Magento (e.g., manually).
+			 * 2) An example of such order:
+			 * https://beta-dashboard.pwinty.com/orders/2086054/detail
+			 * The Magento's Customer: Ortal Mendelawe
+			 * https://inkifi.com/canvaspr_admin/customer/index/edit/id/79904
+			 * The customer does not have assotiated orders in Magento.
+			 * 3) We do not handle such orders because we are unable to create Magento shipping documents
+			 * for non-existent Magento order documents.
 			 */
-			if ($e->status_Submitted()) {
+			if ($orderId_Magento && $e->status_Submitted()) {
 				foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
-					/**
-					 * 2019-04-03
-					 * The `pwinty_order_id` field is initialized by
-					 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
-					 */
-					$mOrder = mOrder::byOId($e->oid()); /** @var $mOrder $mOrder */
+					$mOrder = mOrder::byOId($orderId_Magento); /** @var $mOrder $mOrder */
 					$o = $mOrder->o(); /** @var O|DFO $o */
 					df_assert($o->canShip());
 					// 2019-04-03
@@ -82,7 +90,7 @@ class Index extends \Df\Framework\Action {
 					$shipment->getOrder()->save();
 					df_new_om(ShipmentNotifier::class)->notify($shipment);
 					$shipment->save();
-					df_sentry($this, "{$e->oid()}: a shipment is created", ['extra' => [
+					df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
 						'event' => $e->a(), 'shipment' => $shipment->getIncrementId()
 					]]);
 				}
