@@ -36,10 +36,14 @@ final class Shipment extends \Df\API\Document {
 	/**
 	 * 2019-04-04 «MQ121286142GB»
 	 * 2019-05-13 «VB153813327GB»
+	 * 2019-05-15
+	 * The «N/A» value fixes the «Cannot save track» / «Number can not be empty» error.
+	 * It is similar to: https://github.com/Inkifi-Connect/Media-Clip-Inkifi/blob/2019-05-14/Controller/Index/OneflowResponse.php#L101-L114
+	 * https://log.mage2.pro/inkifi/pwinty/issues/126
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return string
 	 */
-	function trackingNumber() {return $this['trackingNumber'];}
+	function trackingNumber() {return $this['trackingNumber'] ?: 'N/A';}
 
 	/**
 	 * 2019-04-04 «http://www.royalmail.com/portal/rm/track?trackNumber=MQ121286142GB»
