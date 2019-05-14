@@ -50,7 +50,7 @@ class Index extends \Df\Framework\Action {
 					 * The `pwinty_order_id` field is initialized by
 					 * @see \Inkifi\Pwinty\AvailableForDownload::_p()
 					 */
-					$mOrder = mOrder::byPwintyOrderId($e->oidE()); /** @var $mOrder $mOrder */
+					$mOrder = mOrder::byOId($e->oid()); /** @var $mOrder $mOrder */
 					$o = $mOrder->o(); /** @var O|DFO $o */
 					df_assert($o->canShip());
 					// 2019-04-03

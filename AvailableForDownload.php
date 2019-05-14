@@ -74,8 +74,6 @@ final class AvailableForDownload {
 			;}, $mOIs))
 			,function($a, $b) use($smWeight) {return $smWeight($b) - $smWeight($a);}
 		))); /** @var eOrder $eOrder */
-		/** 2019-04-03 @used-by \Inkifi\Pwinty\Controller\Index\Index::execute() */
-		$ev->mo()->oidPwintySet($pwOid = $eOrder->id())->save();  /** @var int $pwOid*/ // 2019-04-03 «775277»
 		/**
 		 * 2019-04-02
 		 * 1) «Add multiple photos to an order»: https://www.pwinty.com/api/2.2/#photos-create-multiple
