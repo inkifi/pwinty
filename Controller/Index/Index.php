@@ -35,6 +35,7 @@ class Index extends \Df\Framework\Action {
 			$e = Event::s(); /** @var Event $e */
 			df_log_l($this, $e->a(), "{$e->oid()}-{$e->status()}");
 			df_sentry($this, "{$e->oid()}: {$e->status()}", ['extra' => $e->a()]);
+			df_sentry_extra($this, 'Pwinty Event', $e->a());
 			/**
 			 * 2019-05-13
 			 * Possible statuses: `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.
