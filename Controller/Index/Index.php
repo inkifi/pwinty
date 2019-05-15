@@ -17,6 +17,7 @@ use Mangoit\MediaclipHub\Model\Orders as mOrder;
  * «Pwinty can make callbacks to a custom URL whenever the status of one of your orders changes.
  * Setup your callback URL under the Integrations section of the Dashboard.
  * Pwinty will make an JSON formatted HTTP POST to your chosen URL with the following parameters.»
+ * @final Unable to use the PHP «final» keyword here because of the M2 code generation.
  */
 class Index extends \Df\Framework\Action {
 	/**
