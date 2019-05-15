@@ -27,6 +27,7 @@ class Index extends \Df\Framework\Action {
 	 * @used-by \Magento\Framework\App\Action\Action::dispatch():
 	 * 		$result = $this->execute();
 	 * https://github.com/magento/magento2/blob/2.2.1/lib/internal/Magento/Framework/App/Action/Action.php#L84-L125
+	 * @see \Mangoit\MediaclipHub\Controller\Index\OneflowResponse::execute()
 	 * @return Text
 	 */
 	function execute() {
@@ -79,13 +80,13 @@ class Index extends \Df\Framework\Action {
 					}
 					$shipment->register();
 					$o->setIsInProcess(true);
-					$track = df_new_om(Track::class); /** @var Track $track */
-					$track->setCarrierCode('Pwinty');
-					$track->setDescription('Pwinty');
-					$track->setNumber($sh->trackingNumber());
-					$track->setTitle('Pwinty');
-					$track->setUrl($sh->trackingUrl());
-					$shipment->addTrack($track);
+					$t = df_new_om(Track::class); /** @var Track $t */
+					$t->setCarrierCode('Pwinty');
+					$t->setDescription('Pwinty');
+					$t->setNumber($sh->trackingNumber());
+					$t->setTitle(ikf_pw_carrier($sh->trackingUrl()));
+					$t->setUrl($sh->trackingUrl());
+					$shipment->addTrack($t);
 					$shipment->save();
 					$shipment->getOrder()->save();
 					df_new_om(ShipmentNotifier::class)->notify($shipment);

@@ -39,6 +39,7 @@ final class Shipment extends \Df\API\Document {
 	 * 2019-05-15
 	 * The «N/A» value fixes the «Cannot save track» / «Number can not be empty» error.
 	 * It is similar to: https://github.com/Inkifi-Connect/Media-Clip-Inkifi/blob/2019-05-14/Controller/Index/OneflowResponse.php#L101-L114
+	 * @see \Mangoit\MediaclipHub\Controller\Index\OneflowResponse::execute()
 	 * https://log.mage2.pro/inkifi/pwinty/issues/126
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return string

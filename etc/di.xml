@@ -1,0 +1,13 @@
+<?xml version='1.0'?>
+<config
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:noNamespaceSchemaLocation='urn:magento:framework:ObjectManager/etc/config.xsd'
+>
+<!-- 2019-05-15 -->
+	<type name='Magento\Shipping\Model\Order\Track'>
+		<plugin
+			name='Inkifi\Pwinty\Plugin\Shipping\Model\Order\Track'
+			type='Inkifi\Pwinty\Plugin\Shipping\Model\Order\Track'
+		/>
+	</type>
+</config>
