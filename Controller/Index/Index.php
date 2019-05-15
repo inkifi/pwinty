@@ -62,39 +62,53 @@ class Index extends \Df\Framework\Action {
 				foreach ($e->shipmentsShipped() as $sh) { /** @var pwShipment $sh */
 					$mOrder = mOrder::byOId($orderId_Magento); /** @var $mOrder $mOrder */
 					$o = $mOrder->o(); /** @var O|DFO $o */
-					df_assert($o->canShip());
-					// 2019-04-03
-					// Currently, these values are only set to the database,
-					// but they are never retrieved from there.
-					$mOrder->trackingNumberSet($sh->trackingNumber());
-					$mOrder->trackingUrlSet($sh->trackingUrl());
-					$mOrder->save();
-					$converter = df_new_om(Converter::class); /** @var Converter $converter */
-					$shipment = $converter->toShipment($o); /** @var Shipment $shipment */
-					foreach ($o->getAllItems() as $oi) { /** @var OI $oi */
-						if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
-							$qtyShipped = $oi->getQtyToShip();
-							$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
-							$si->setQty($qtyShipped);
-							$shipment->addItem($si);
-						}
+					// 2019-05-16 https://log.mage2.pro/inkifi/pwinty/issues/179
+					if (!$o->canShip()) {
+						df_sentry($this, "$orderId_Magento: not eligible for shipping", ['extra' => [
+							'event' => $e->a()
+							,'Order Flags' => [
+								'canUnhold' => df_bts_yn($o->canUnhold())
+								,'isPaymentReview' => df_bts_yn($o->isPaymentReview())
+								,'getIsVirtual' => df_bts_yn($o->getIsVirtual())
+								,'getActionFlag(O::ACTION_FLAG_SHIP)' =>
+									df_bts_yn($o->getActionFlag(O::ACTION_FLAG_SHIP)())
+							]
+						]]);
 					}
-					$shipment->register();
-					$o->setIsInProcess(true);
-					$t = df_new_om(Track::class); /** @var Track $t */
-					$t->setCarrierCode('Pwinty');
-					$t->setDescription('Pwinty');
-					$t->setNumber($sh->trackingNumber());
-					$t->setTitle(ikf_pw_carrier($sh->trackingUrl()));
-					$t->setUrl($sh->trackingUrl());
-					$shipment->addTrack($t);
-					$shipment->save();
-					$shipment->getOrder()->save();
-					df_new_om(ShipmentNotifier::class)->notify($shipment);
-					$shipment->save();
-					df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
-						'event' => $e->a(), 'shipment' => $shipment->getIncrementId()
-					]]);
+					else {
+						// 2019-04-03
+						// Currently, these values are only set to the database,
+						// but they are never retrieved from there.
+						$mOrder->trackingNumberSet($sh->trackingNumber());
+						$mOrder->trackingUrlSet($sh->trackingUrl());
+						$mOrder->save();
+						$converter = df_new_om(Converter::class); /** @var Converter $converter */
+						$shipment = $converter->toShipment($o); /** @var Shipment $shipment */
+						foreach ($o->getAllItems() as $oi) { /** @var OI $oi */
+							if ($oi->getQtyToShip() && !$oi->getIsVirtual()) {
+								$qtyShipped = $oi->getQtyToShip();
+								$si = $converter->itemToShipmentItem($oi); /** @var SI $si */
+								$si->setQty($qtyShipped);
+								$shipment->addItem($si);
+							}
+						}
+						$shipment->register();
+						$o->setIsInProcess(true);
+						$t = df_new_om(Track::class); /** @var Track $t */
+						$t->setCarrierCode('Pwinty');
+						$t->setDescription('Pwinty');
+						$t->setNumber($sh->trackingNumber());
+						$t->setTitle(ikf_pw_carrier($sh->trackingUrl()));
+						$t->setUrl($sh->trackingUrl());
+						$shipment->addTrack($t);
+						$shipment->save();
+						$shipment->getOrder()->save();
+						df_new_om(ShipmentNotifier::class)->notify($shipment);
+						$shipment->save();
+						df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
+							'event' => $e->a(), 'shipment' => $shipment->getIncrementId()
+						]]);
+					}
 				}
 			}
 			/**
