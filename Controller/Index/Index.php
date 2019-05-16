@@ -39,8 +39,8 @@ class Index extends \Df\Framework\Action {
 			$orderId_Pwinty = $e->orderId_Pwinty(); /** @var int $orderId_Pwinty */
 			$orderId_Log = $orderId_Magento ?: "PW-$orderId_Pwinty";  /** @var int|string  $orderId_Log */
 			df_log_l($this, $e->a(), "$orderId_Log-{$e->status()}");
-			df_sentry($this, "$orderId_Log: {$e->status()}", ['extra' => $e->a()]);
-			df_sentry_extra($this, 'Pwinty Event', $e->a());
+			df_sentry_extra($this, 'Event', $e->a());
+			df_sentry($this, "$orderId_Log: {$e->status()}");
 			/**
 			 * 2019-05-13
 			 * Possible statuses: `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.
@@ -65,8 +65,7 @@ class Index extends \Df\Framework\Action {
 					// 2019-05-16 https://log.mage2.pro/inkifi/pwinty/issues/179
 					if (!$o->canShip()) {
 						df_sentry($this, "$orderId_Magento: not eligible for shipping", ['extra' => [
-							'event' => $e->a()
-							,'Order Flags' => [
+							'Order Flags' => [
 								'canUnhold' => df_bts_yn($o->canUnhold())
 								,'isPaymentReview' => df_bts_yn($o->isPaymentReview())
 								,'getIsVirtual' => df_bts_yn($o->getIsVirtual())
@@ -106,7 +105,7 @@ class Index extends \Df\Framework\Action {
 						df_new_om(ShipmentNotifier::class)->notify($shipment);
 						$shipment->save();
 						df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
-							'event' => $e->a(), 'shipment' => $shipment->getIncrementId()
+							'shipment' => $shipment->getIncrementId()
 						]]);
 					}
 				}
