@@ -75,9 +75,6 @@ class Index extends \Df\Framework\Action {
 						]]);
 					}
 					else {
-						// 2019-04-03
-						// Currently, these values are only set to the database,
-						// but they are never retrieved from there.
 						$mOrder->trackingNumberSet($sh->trackingNumber());
 						$mOrder->trackingUrlSet($sh->trackingUrl());
 						$mOrder->save();
