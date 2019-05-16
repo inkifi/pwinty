@@ -98,7 +98,7 @@ class Index extends \Df\Framework\Action {
 						$t->setUrl($sh->trackingUrl());
 						$shipment->addTrack($t);
 						$shipment->save();
-						$shipment->getOrder()->save();
+						$o->save();
 						df_new_om(ShipmentNotifier::class)->notify($shipment);
 						$shipment->save();
 						df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
