@@ -10,7 +10,6 @@ use Magento\Sales\Model\Order\Item as OI;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\Shipment\Item as SI;
 use Magento\Sales\Model\Order\Shipment\Track;
-use Magento\Shipping\Model\ShipmentNotifier;
 use Mangoit\MediaclipHub\Model\Orders as mOrder;
 /**
  * 2019-04-04 https://www.pwinty.com/api#callbacks
@@ -103,7 +102,7 @@ class Index extends \Df\Framework\Action {
 						$shipment->addTrack($t);
 						$shipment->save();
 						$o->save();
-						df_new_om(ShipmentNotifier::class)->notify($shipment);
+						df_mail_shipment($shipment);
 						$shipment->save();
 						if (!df_my_local()) {
 							df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
