@@ -99,7 +99,24 @@ final class Event extends \Df\API\Document {
 	 * @used-by \Inkifi\Pwinty\Controller\Index\Index::execute()
 	 * @return Event
 	 */
-	static function s() {return dfcf(function() {return new self(df_json_decode(file_get_contents(
-		'php://input'
-	)));});}
+	static function s() {return dfcf(function() {return new self(df_json_decode(
+		!df_my_local() ? file_get_contents('php://input') :
+			'{
+				"environment": "live",
+				"id": 2094661,
+				"merchantOrderId": "65938",
+				"shipments": [
+					{
+						"items": [
+							11637686
+						],
+						"status": "shipped",
+						"trackingNumber": "VB154056014GB",
+						"trackingUrl": "http://www.royalmail.com/portal/rm/track?trackNumber=VB154056014GB"
+					}
+				],
+				"status": "Submitted",
+				"timestamp": "2019-05-15T11:57:54.4149099Z"
+			}'
+	));});}
 }

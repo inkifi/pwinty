@@ -38,9 +38,11 @@ class Index extends \Df\Framework\Action {
 			$orderId_Magento = $e->orderId_Magento(); /** @var int $orderId_Magento */
 			$orderId_Pwinty = $e->orderId_Pwinty(); /** @var int $orderId_Pwinty */
 			$orderId_Log = $orderId_Magento ?: "PW-$orderId_Pwinty";  /** @var int|string  $orderId_Log */
-			df_log_l($this, $e->a(), "$orderId_Log-{$e->status()}");
-			df_sentry_extra($this, 'Event', $e->a());
-			df_sentry($this, "$orderId_Log: {$e->status()}");
+			if (!df_my_local()) {
+				df_log_l($this, $e->a(), "$orderId_Log-{$e->status()}");
+				df_sentry_extra($this, 'Event', $e->a());
+				df_sentry($this, "$orderId_Log: {$e->status()}");
+			}
 			/**
 			 * 2019-05-13
 			 * Possible statuses: `NotYetSubmitted`, `Submitted`, `Complete`, or `Cancelled`.
@@ -64,15 +66,17 @@ class Index extends \Df\Framework\Action {
 					$o = $mOrder->o(); /** @var O|DFO $o */
 					// 2019-05-16 https://log.mage2.pro/inkifi/pwinty/issues/179
 					if (!$o->canShip()) {
-						df_sentry($this, "$orderId_Magento: not eligible for shipping", ['extra' => [
-							'Order Flags' => [
-								'canUnhold' => df_bts_yn($o->canUnhold())
-								,'isPaymentReview' => df_bts_yn($o->isPaymentReview())
-								,'getIsVirtual' => df_bts_yn($o->getIsVirtual())
-								,'getActionFlag(O::ACTION_FLAG_SHIP)' =>
-									df_bts_yn($o->getActionFlag(O::ACTION_FLAG_SHIP)())
-							]
-						]]);
+						if (!df_my_local()) {
+							df_sentry($this, "$orderId_Magento: not eligible for shipping", ['extra' => [
+								'Order Flags' => [
+									'canUnhold' => df_bts_yn($o->canUnhold())
+									,'isPaymentReview' => df_bts_yn($o->isPaymentReview())
+									,'getIsVirtual' => df_bts_yn($o->getIsVirtual())
+									,'getActionFlag(O::ACTION_FLAG_SHIP)' =>
+										df_bts_yn($o->getActionFlag(O::ACTION_FLAG_SHIP)())
+								]
+							]]);
+						}
 					}
 					else {
 						$mOrder->trackingNumberSet($sh->trackingNumber());
@@ -101,9 +105,11 @@ class Index extends \Df\Framework\Action {
 						$o->save();
 						df_new_om(ShipmentNotifier::class)->notify($shipment);
 						$shipment->save();
-						df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
-							'shipment' => $shipment->getIncrementId()
-						]]);
+						if (!df_my_local()) {
+							df_sentry($this, "$orderId_Magento: a shipment is created", ['extra' => [
+								'shipment' => $shipment->getIncrementId()
+							]]);
+						}
 					}
 				}
 			}
