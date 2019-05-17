@@ -38,7 +38,7 @@ class Index extends \Df\Framework\Action {
 			$orderId_Pwinty = $e->orderId_Pwinty(); /** @var int $orderId_Pwinty */
 			$orderId_Log = $orderId_Magento ?: "PW-$orderId_Pwinty";  /** @var int|string  $orderId_Log */
 			if (!df_my_local()) {
-				df_log_l($this, $e->a(), "$orderId_Log-{$e->status()}");
+				df_report("pwinty/$orderId_Log-{$e->status()}.log", $e->j());
 				df_sentry_extra($this, 'Event', $e->a());
 				df_sentry($this, "$orderId_Log: {$e->status()}");
 			}
