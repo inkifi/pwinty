@@ -40,7 +40,7 @@ class Index extends \Df\Framework\Action {
 			if (!df_my_local()) {
 				df_report("pwinty/$orderId_Log-{$e->status()}.log", $e->j());
 				df_sentry_extra($this, 'Event', $e->a());
-				df_sentry($this, "$orderId_Log: {$e->status()}");
+				//df_sentry($this, "$orderId_Log: {$e->status()}");
 			}
 			/**
 			 * 2019-05-13
