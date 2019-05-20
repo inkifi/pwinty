@@ -32,60 +32,69 @@ final class AvailableForDownload {
 		// https://github.com/Inkifi-Connect/Media-Clip-Inkifi/issues/1
 		$o = $ev->o(); /** @var O $o */
 		$mOIs = ikf_api_oi($o->getId(), Printer::PWINTY); /** @var mOI[] $mOIs */
-		/** @var array(string => int) $smWeights */
-		$smWeights = array_flip(['Budget', 'Standard', 'Express', 'Overnight']);
 		/**
-		 * @param string $v
-		 * @return int
+		 * 2019-05-20
+		 * Not every order has images to send.
+		 * 1) https://log.mage2.pro/inkifi/mangoit/issues/271
+		 * 2) «If the Pwinty SKU is added into this box
+		 * then the product should be sent to Pwinty when an order is placed.
+		 * If the Pwinty SKU is not added into this box then Magento should not send this product to Pwinty.»
+		 * https://www.upwork.com/messages/rooms/room_759684bcafe746240e5c091d3745e787/story_1c38f1480b95d93d83fe42345cd2097c
 		 */
-		$smWeight = function($v) use($smWeights) {return dftr($v, $smWeights);};
-		/**
-		 * 2019-04-02
-		 * «Create an order» https://www.pwinty.com/api/2.2/#orders-create
-		 * A response:
-		 * {
-		 *		"address1": "47 Wolverhampton Road",
-		 *		"address2": "",
-		 *		"addressTownOrCity": "Dudley",
-		 *		"countryCode": "GB",
-		 *		"destinationCountryCode": "GB",
-		 *		"errorMessage": null,
-		 *		"id": 775277,
-		 *		"payment": "InvoiceMe",
-		 *		"paymentUrl": null,
-		 *		"photos": [],
-		 *		"postalOrZipCode": "DY3 1RG",
-		 *		"price": 0,
-		 *		"qualityLevel": "Pro",
-		 *		"recipientName": "Jessica Bowkley ",
-		 *		"shippingInfo": {
-		 *			"isTracked": false,
-		 *			"price": 0,
-		 *			"trackingNumber": null,
-		 *			"trackingUrl": null
-		 *		},
-		 *		"stateOrCounty": "England",
-		 *		"status": "NotYetSubmitted"
-		 *	}
-		 */
-		$eOrder = bCreate::p($o, df_first(df_sort(
-			array_unique(array_map(function(mOI $mOI) {return
-				$mOI->mProduct()->pwintyShippingMethod()
-			;}, $mOIs))
-			,function($a, $b) use($smWeight) {return $smWeight($b) - $smWeight($a);}
-		))); /** @var eOrder $eOrder */
-		/**
-		 * 2019-04-02
-		 * 1) «Add multiple photos to an order»: https://www.pwinty.com/api/2.2/#photos-create-multiple
-		 * 2) This API endpoint is absent in the latest Pwinty API version (3.0).
-		 * Pwinty API 3.0 provides another endpoint: https://www.pwinty.com/api/#images-add-batch
-		 */
-		bAddImages::p($eOrder, dfa_flatten(df_map($mOIs, function(mOI $mOI) {return $this->images($mOI);})));
-		$r = bValidate::p($eOrder); /** @var R $r */
-		if (!$r->valid()) {
-			df_error($r->j());
+		/** @var eImage[] $images */
+		if (!($images = dfa_flatten(df_map($mOIs, function(mOI $mOI) {return $this->images($mOI);})))) {
+			df_sentry($this, "{$o->getId()}: no eligible images for Pwinty");
 		}
-		bSubmit::p($eOrder);
+		else {
+			/** @var array(string => int) $smWeights */
+			$smWeights = array_flip(['Budget', 'Standard', 'Express', 'Overnight']);
+			/**
+			 * @param string $v
+			 * @return int
+			 */
+			$smWeight = function($v) use($smWeights) {return dftr($v, $smWeights);};
+			/**
+			 * 2019-04-02
+			 * «Create an order» https://www.pwinty.com/api/2.2/#orders-create
+			 * A response:
+			 * {
+			 *		"address1": "47 Wolverhampton Road",
+			 *		"address2": "",
+			 *		"addressTownOrCity": "Dudley",
+			 *		"countryCode": "GB",
+			 *		"destinationCountryCode": "GB",
+			 *		"errorMessage": null,
+			 *		"id": 775277,
+			 *		"payment": "InvoiceMe",
+			 *		"paymentUrl": null,
+			 *		"photos": [],
+			 *		"postalOrZipCode": "DY3 1RG",
+			 *		"price": 0,
+			 *		"qualityLevel": "Pro",
+			 *		"recipientName": "Jessica Bowkley ",
+			 *		"shippingInfo": {
+			 *			"isTracked": false,
+			 *			"price": 0,
+			 *			"trackingNumber": null,
+			 *			"trackingUrl": null
+			 *		},
+			 *		"stateOrCounty": "England",
+			 *		"status": "NotYetSubmitted"
+			 *	}
+			 */
+			$eOrder = bCreate::p($o, df_first(df_sort(
+				array_unique(array_map(function(mOI $mOI) {return
+					$mOI->mProduct()->pwintyShippingMethod()
+				;}, $mOIs))
+				,function($a, $b) use($smWeight) {return $smWeight($b) - $smWeight($a);}
+			))); /** @var eOrder $eOrder */
+			bAddImages::p($eOrder, $images);
+			$r = bValidate::p($eOrder); /** @var R $r */
+			if (!$r->valid()) {
+				df_error($r->j());
+			}
+			bSubmit::p($eOrder);
+		}
 	}
 
 	/**
@@ -107,10 +116,18 @@ final class AvailableForDownload {
 		 * "Pwinty Product Name"
 		 * If the Pwinty SKU is added into this box
 		 * then the product should be sent to Pwinty when an order is placed.
-		 * If the Pwinty SKU is not added into this box then Magneto should not send this product to Pwinty.»
+		 * If the Pwinty SKU is not added into this box then Magento should not send this product to Pwinty.»
 		 * https://www.upwork.com/messages/rooms/room_759684bcafe746240e5c091d3745e787/story_1c38f1480b95d93d83fe42345cd2097c
 		 */
-		if (($files = $mOI->files()) && ($pwSKU = $mP->pwintyProductSku())) { /** @var string|null $pwSKU */
+		/** @var F[] $files */
+		if (!($files = $mOI->files())) {
+			df_sentry_extra_f('$mOI->files() is empty');
+		}
+		/** @var string|null $pwSKU */
+		else if (!($pwSKU = $mP->pwintyProductSku())) {
+			df_sentry_extra_f('$mP->pwintyProductSku() is empty');
+		}
+		else {
 			/**
 			 * 2018-11-02 Dmitry Fedyuk https://www.upwork.com/fl/mage2pro
 			 * «Generate JSON data for photo-books»
