@@ -19,7 +19,7 @@ class UpgradeSchema extends \Df\Framework\Upgrade\Schema {
 			 * 2) API 3.0: «Possible values are `Budget`, `Standard`, `Express`, and `Overnight`»:
 			 * https://www.pwinty.com/api#orders-create
 			 */
-			$this->column('mediacliphub_product', mP::F__PWINTY_SHIPPING_METHOD, 'varchar(255) DEFAULT NULL');
+			$this->column('mediacliphub_product', mP::F__PWINTY_SHIPPING_METHOD);
 		}
 	}
 }
