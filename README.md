@@ -3,6 +3,7 @@ A custom integration between [inkifi.com](https://inkifi.com) and [Pwinty](https
 ## How to install
 ```
 bin/magento maintenance:enable
+rm -rf composer.lock
 composer clear-cache
 composer require inkifi/pwinty:*
 bin/magento setup:upgrade
