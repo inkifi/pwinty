@@ -8,7 +8,7 @@
 			<group
 				id='pwinty'
 				showInDefault='1' showInStore='1' showInWebsite='1'
-				sortOrder='10'
+				sortOrder='20'
 				type='text'
 			>
 				<label>Pwinty</label>
