@@ -96,8 +96,8 @@ final class Order extends \Df\API\Document {
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Get::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Submit::p()
 	 * @used-by \Inkifi\Pwinty\API\B\Order\Validate::p()
-	 * @param O|null $v [optional]
+	 * @param O|null|string $v [optional]
 	 * @return O|null
 	 */
-	function magentoOrder($v = null) {return df_prop($this, $v);}
+	function magentoOrder($v = DF_N) {return df_prop($this, $v);}
 }

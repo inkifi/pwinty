@@ -65,10 +65,10 @@ final class Image extends \Df\API\Document {
 	 * For valid attributes see the product list.»
 	 * https://www.pwinty.com/api/2.6/#photos-create
 	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
-	 * @param string[]|null $v [optional]
+	 * @param string[]|null|string $v [optional]
 	 * @return string[]|$this
 	 */
-	function attributes($v = null) {return df_prop($this, $v);}
+	function attributes($v = DF_N) {return df_prop($this, $v);}
 
 	/**
 	 * 2019-04-10
@@ -77,10 +77,10 @@ final class Image extends \Df\API\Document {
 	 * https://www.pwinty.com/api/2.6/#photos-create
 	 * https://www.pwinty.com/api/2.6/#photos-create-multiple
 	 * @used-by \Inkifi\Pwinty\AvailableForDownload::images()
-	 * @param int|null $v [optional]
+	 * @param int|null|string $v [optional]
 	 * @return int|$this
 	 */
-	function copies($v = null) {return df_prop($this, $v, 'int');}
+	function copies($v = DF_N) {return df_prop($this, $v, 'int');}
 
 	/**
 	 * 2019-04-07
@@ -102,7 +102,7 @@ final class Image extends \Df\API\Document {
 	 * @param string|null $v [optional]
 	 * @return string|$this
 	 */
-	function sizing($v = null) {return df_prop($this, $v);}
+	function sizing($v = DF_N) {return df_prop($this, $v);}
 
 	/**
 	 * 2019-04-10
@@ -117,7 +117,7 @@ final class Image extends \Df\API\Document {
 	 * @param string|null $v [optional]
 	 * @return string|$this
 	 */
-	function sku($v = null) {return df_prop($this, $v);}
+	function sku($v = DF_N) {return df_prop($this, $v);}
 
 	/**
 	 * 2019-04-10
@@ -129,5 +129,5 @@ final class Image extends \Df\API\Document {
 	 * @param string|null $v [optional]
 	 * @return string|$this
 	 */
-	function url($v = null) {return df_prop($this, $v);}
+	function url($v = DF_N) {return df_prop($this, $v);}
 }
