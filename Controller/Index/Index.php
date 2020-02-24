@@ -123,7 +123,7 @@ class Index extends \Df\Framework\Action {
 			$r = Text::i('OK');
 		}
 		catch (\Exception $e) {
-			df_response_code(500);
+			df_500();
 			$r = Text::i(df_ets($e));
 			df_log($e, $this);
 			if (df_my_local()) {
