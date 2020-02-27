@@ -43,7 +43,7 @@ namespace Inkifi\Pwinty\API\Entity\Order;
  *		"generalErrors": []
  *	}
  */
-final class ValidationResult extends \Df\API\Document {
+final class ValidationResult extends \Df\Core\O {
 	/**
 	 * 2019-04-06
 	 * @used-by \Inkifi\Pwinty\T\CaseT\V30\Order\Validate::t03()

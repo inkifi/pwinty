@@ -75,7 +75,7 @@ use Magento\Sales\Model\Order as O;
  *	}
  * @used-by \Inkifi\Pwinty\API\B\Order\Create::p()
  */
-final class Order extends \Df\API\Document {
+final class Order extends \Df\Core\O {
 	/**
 	 * 2019-04-05
 	 * @used-by \Inkifi\Pwinty\API\B\Order\AddImage::p()

@@ -11,7 +11,7 @@ namespace Inkifi\Pwinty\API\Entity;
  *	}
  * @used-by \Inkifi\Pwinty\Event::shipments()
  */
-final class Shipment extends \Df\API\Document {
+final class Shipment extends \Df\Core\O {
 	/**
 	 * 2019-04-04 «Either `InProgress` or `Shipped`».
 	 * 2019-05-13

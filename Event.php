@@ -20,7 +20,7 @@ use Inkifi\Pwinty\API\Entity\Shipment;
  *		"timestamp": "2019-05-13T12:21:47.9708616Z"
  *	}
  */
-final class Event extends \Df\API\Document {
+final class Event extends \Df\Core\O {
 	/**
 	 * 2019-05-10
 	 * This key is undecomented. We pass its value in @see \Inkifi\Pwinty\API\B\Order\Create::p()

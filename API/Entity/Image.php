@@ -55,7 +55,7 @@ namespace Inkifi\Pwinty\API\Entity;
  *		"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1024px-Cat_poster_1.jpg"
  *	}
  */
-final class Image extends \Df\API\Document {
+final class Image extends \Df\Core\O {
 	/**
 	 * 2019-04-07
 	 * 1) «An object containing all the attributes set on the object.
