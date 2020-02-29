@@ -37,7 +37,7 @@ final class Client extends \Df\API\Client {
 	 * 2019-04-04
 	 * @override
 	 * @see \Df\API\Client::responseValidatorC()
-	 * @used-by \Df\API\Client::p()
+	 * @used-by \Df\API\Client::_p()
 	 * @return string
 	 */
 	protected function responseValidatorC() {return \Inkifi\Pwinty\API\Validator::class;}
