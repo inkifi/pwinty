@@ -40,7 +40,6 @@ class Index extends \Df\Framework\Action {
 			if (!df_my_local()) {
 				df_report("pwinty/$orderId_Log-{$e->status()}.log", $e->j());
 				df_sentry_extra($this, 'Event', $e->a());
-				//df_sentry($this, "$orderId_Log: {$e->status()}");
 			}
 			/**
 			 * 2019-05-13
@@ -71,8 +70,7 @@ class Index extends \Df\Framework\Action {
 									'canUnhold' => df_bts_yn($o->canUnhold())
 									,'isPaymentReview' => df_bts_yn($o->isPaymentReview())
 									,'getIsVirtual' => df_bts_yn($o->getIsVirtual())
-									,'getActionFlag(O::ACTION_FLAG_SHIP)' =>
-										df_bts_yn($o->getActionFlag(O::ACTION_FLAG_SHIP)())
+									,'getActionFlag(O::ACTION_FLAG_SHIP)' => df_bts_yn($o->getActionFlag(O::ACTION_FLAG_SHIP))
 								]
 							]]);
 						}
