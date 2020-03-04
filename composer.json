@@ -1,6 +1,6 @@
 {
 	"name": "inkifi/pwinty"
-	,"version": "0.4.4"
+	,"version": "0.4.5"
 	,"description": "A custom integration between inkifi.com and Pwinty"
 	,"type": "magento2-module"
 	,"homepage": "https://github.com/inkifi/pwinty"
@@ -11,7 +11,7 @@
 		,"homepage": "https://mage2.pro/users/dmitry_fedyuk"
 		,"role": "Developer"
 	}]
-	,"require": {"mage2pro/core": ">=6.3.2"}
+	,"require": {"inkifi/core":  ">=0.1.9", "mage2pro/core": ">=6.4.0"}
 	,"autoload": {"files": ["registration.php"], "psr-4": {"Inkifi\\Pwinty\\": ""}}
 	,"keywords": ["Magento 2"]
 }
